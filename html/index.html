@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/main.css">
+    <title>Document</title>
+</head>
+<body>
+    
+<div class="container">
+  <!-- Button trigger authorization -->
+  <div class="row">
+    <div class="sign-in d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login-form">
+        Sign in
+      </button>
+    </div>
+  </div>
+  
+
+  <!-- Authorization window -->
+  <div class="modal fade" id="login-form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label class="form-label">Login</label>
+              <input type="text" class="form-control" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="documents row">
+    <div class="documents-title">Ваши договора:</div>
+    <div class="document-element row col-5">
+      <div class="document-info col">
+        <div class="document-text">г. Екатеринбург ул. Ленина 51 к.28</div>
+        <div class="document-text">Тип: хрупкое</div>
+        <div class="document-text">Вес: 100кг</div>
+      </div>
+      <div class="row col justify-content-end">
+        <div class="document-details-button align-self-end col-6">
+          <button type="button" class="btn btn-primary btn-details" data-bs-toggle="modal" data-bs-target="#document-details">
+            Детали
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="document-details" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="document-details-full row">
+            <div class="document-details col">
+              <div class="document-text">г. Екатеринбург ул. Ленина 51 к.28</div>
+              <div class="document-text">Тип: хрупкое</div>
+              <div class="document-text">Вес: 100кг</div>
+              <div class="document-text">Дата: 02.02.2022</div>
+              <div class="document-text">Цена: 20000 руб.</div>
+              <div class="document-text">Статус: неподписан</div>
+            </div>
+            <div class="document-details-button row col justify-content-end">
+              <div class="document-details-button__sign align-self-end col-6">
+                <form action="/sign" method="post">
+                  <button type="submit" class="btn btn-primary">
+                    Подписать
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="row documents">
+    <div class="document-element row col-5">
+      <div class="document-info col">
+        <div class="docoment-text">Иванов Иван Иванович</div>
+        <div class="document-details-button__documents col-3">
+          <a href="main.html">
+          <button type="button" class="btn btn-primary btn-details">
+            Договора
+          </button>
+        </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+    
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+.sign-in {
+    margin: 10px;
+}
+
+.document-element {
+    border-radius: 10px;
+    border: 1px solid grey;
+    padding: 3px;
+}
+
+.btn-details {
+    width: 100%;
+}
+
+.document-details-full {
+    padding: 2px 5px;
+}
+
+.document-details-button__documents {
+    margin-top: 20px;
+}
