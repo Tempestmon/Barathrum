@@ -8,8 +8,8 @@ from typing import List
 
 
 class MongoBase:
-    client = MongoClient('mongodb://%s:%s@localhost:27017/' % (getenv('MONGO_USER', 'barathrum_admin'),
-                         getenv('MONGO_PASSWORD', 'iogaeS0JaeThee0aibah')))
+    client = MongoClient('mongodb://%s:%s@localhost:27017/' % (getenv('MONGO_USER', ''),
+                         getenv('MONGO_PASSWORD', '')))
 
     DATABASE_NAME = 'barathrum'
     ORDER_COLLECTION_NAME = 'orders'
