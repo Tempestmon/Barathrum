@@ -40,3 +40,6 @@ class Controller:
 
     def extract_solutions_from_bd(self) -> List[Solution]:
         pass
+
+    def sign_up_user(self) -> None:
+        pass

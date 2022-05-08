@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel as PyBaseModel, Field
+from pydantic import BaseModel as PyBaseModel, Field, SecretStr
 from typing import Optional
 from uuid import UUID, uuid4
 from datetime import datetime, date
@@ -22,6 +22,7 @@ class Person(BaseModel):
 class Customer(Person):
     email: str
     phone: str
+    password: SecretStr
 
 
 class Driver(Person):
