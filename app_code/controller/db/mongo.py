@@ -1,15 +1,20 @@
+import os
+from os.path import join, dirname
 from pymongo import MongoClient
 from pymongo.errors import OperationFailure
 from pymongo.results import DeleteResult, InsertOneResult, UpdateResult, InsertManyResult
-from os import getenv
 from orjson import orjson
-from app.models.entities import Order, Driver, Solution
+from app_code.models.entities import Order, Driver, Solution
 from typing import List
+from dotenv import load_dotenv
+
+dotenv_path = join(dirname(__file__), 'envs.env')
+load_dotenv(dotenv_path)
 
 
 class MongoBase:
-    client = MongoClient('mongodb://%s:%s@localhost:27017/' % (getenv('MONGO_USER', ''),
-                         getenv('MONGO_PASSWORD', '')))
+    client = MongoClient('mongodb://%s:%s@localhost:27017/' % (os.environ.get('MONGO_USER'),
+                         os.environ.get('MONGO_PASSWORD')))
 
     DATABASE_NAME = 'barathrum'
     ORDER_COLLECTION_NAME = 'orders'

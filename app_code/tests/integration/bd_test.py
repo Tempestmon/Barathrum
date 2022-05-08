@@ -1,7 +1,7 @@
 import pytest
 from typing import Tuple
-from app.controller.db.mongo import MongoBase
-from app.models.entities import Order, Cargo, Customer
+from app_code.controller.db.mongo import MongoBase
+from app_code.models.entities import Order, Cargo, Customer
 from pymongo.errors import DuplicateKeyError
 
 

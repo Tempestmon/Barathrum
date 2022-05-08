@@ -1,7 +1,7 @@
 import uuid
 import pytest
-from app.models.entities import Cargo, Customer, Order
-from app.tests.integration.bd_test import right_order_data
+from app_code.models.entities import Cargo, Customer, Order
+from app_code.tests.integration.bd_test import right_order_data
 
 
 @pytest.fixture()

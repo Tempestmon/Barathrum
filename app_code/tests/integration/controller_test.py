@@ -1,6 +1,6 @@
 import pytest
 from pydantic import ValidationError
-from app.controller.controller import Controller
+from app_code.controller.controller import Controller
 
 
 @pytest.fixture()

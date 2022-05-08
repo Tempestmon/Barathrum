@@ -1,5 +1,5 @@
-from app.models.entities import Customer, Order, Cargo, Solution
-from app.controller.db.mongo import MongoBase
+from app_code.models.entities import Customer, Order, Cargo, Solution
+from app_code.controller.db.mongo import MongoBase
 from typing import List
 
 

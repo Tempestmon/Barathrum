@@ -131,3 +131,5 @@ dmypy.json
 .idea/
 
 mongo_volume/
+
+app_code/controller/db/envs.env
