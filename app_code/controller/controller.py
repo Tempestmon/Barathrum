@@ -1,6 +1,7 @@
 from app_code.models.entities import Customer, Order, Cargo, Solution
-from app_code.controller.db.mongo import MongoBase
+from app_code.controller.db.mongo import MongoBase, CustomerExistsException
 from typing import List
+from bcrypt import hashpw, checkpw, gensalt
 
 
 class Controller:
@@ -41,5 +42,29 @@ class Controller:
     def extract_solutions_from_bd(self) -> List[Solution]:
         pass
 
-    def sign_up_user(self) -> None:
-        pass
+    def sign_up_user(self, data: dict) -> bool:
+        data['password'] = hashpw(data['password'], gensalt())
+        customer = Customer(**data)
+        db = MongoBase()
+        try:
+            db.upload_customer(customer)
+        except CustomerExistsException:
+            return False
+        return True
+
+    def login_user(self, data: dict) -> Customer:
+        db = MongoBase()
+        try:
+            customer = db.get_customer_by_email(data['email'])
+            if checkpw(data['password'], customer.password):
+                return customer
+        except Exception as e:
+            raise e
+
+    def get_user_by_id(self, user_id: str) -> Customer:
+        db = MongoBase()
+        try:
+            customer = db.get_customer_by_id(user_id)
+            return customer
+        except Exception as e:
+            raise e

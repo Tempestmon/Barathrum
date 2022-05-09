@@ -1,8 +1,9 @@
 from enum import Enum
-from pydantic import BaseModel as PyBaseModel, Field, SecretStr
+from pydantic import BaseModel as PyBaseModel, Field
 from typing import Optional
 from uuid import UUID, uuid4
 from datetime import datetime, date
+from flask_login import UserMixin
 
 
 class BaseModel(PyBaseModel):
@@ -19,10 +20,10 @@ class Person(BaseModel):
     middle_name: Optional[str] = None
 
 
-class Customer(Person):
+class Customer(Person, UserMixin):
     email: str
     phone: str
-    password: SecretStr
+    password: str
 
 
 class Driver(Person):

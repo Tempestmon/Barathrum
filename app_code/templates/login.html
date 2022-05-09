@@ -31,7 +31,7 @@
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a href="#orders" class="nav-link">Заказы</a>
+                        <a href="/orders" class="nav-link">Заказы</a>
                     </li>
                     <li class="nav-item">
                         <a href="#contracts" class="nav-link">Договоры</a>
@@ -49,11 +49,24 @@
     <!-- Login form -->
     <div class="container p-5">
         <div class="container p-5 w-50 h-50 text-center">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ messages[0] }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% endwith %}
             <form class="form-signin" action="/login" method="post">
                 <img src="static/logo.png" alt="logo" class="mb-4" width="72" height="72">
                 <h1 class="h3 mb-3 font-weight-normal">Войдите в систему</h1>
-                <input type="email" class="form-control mb-4" placeholder="Email" required autofocus>
-                <input type="password" class="form-control mb-4" placeholder="Пароль" required>
+
+                <input type="text" name="email" id="email" placeholder="ivan@mail.ru" class="form-control mb-4"
+                    required />
+
+                <input type="password" name="password" id="password" placeholder="Пароль" class="form-control mb-4"
+                    required />
+
                 <button class="btn btn-primary" type="submit">Войти</button>
             </form>
         </div>
@@ -62,8 +75,9 @@
                 oninput='password_confirmation.setCustomValidity(password_confirmation.value != password.value ? "Пароли не совпадают" : "")'>
                 <h1 class="h3 mb-3 font-weight-normal text-center">Или зарегистрируйтесь!</h1>
 
-                <label for="name" class="form-label">Email:</label>
-                <input type="email" class="form-control mb-4" placeholder="Email" required autofocus>
+                <label for="email" class="form-label">Имя:</label>
+                <input type="email" name="email" id="email" placeholder="ivan@mail.ru" class="form-control mb-4"
+                    required />
 
                 <label for="name" class="form-label">Имя:</label>
                 <input type="text" name="name" id="name" placeholder="Иван" class="form-control mb-4" required />
@@ -82,7 +96,8 @@
                     required />
 
                 <label for="password" class="form-label">Пароль:</label>
-                <input type="password" id="password" class="form-control mb-4" placeholder="Пароль" required>
+                <input type="password" name="password" id="password" placeholder="Пароль" class="form-control mb-4"
+                    required />
 
                 <label for="password_confirmation" class="form-label">Подтвердите пароль:</label>
                 <input type="password" id="password_confirmation" class="form-control mb-4"

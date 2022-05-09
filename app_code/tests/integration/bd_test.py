@@ -1,3 +1,4 @@
+from bcrypt import hashpw, gensalt, checkpw
 import pytest
 from typing import Tuple
 from app_code.controller.db.mongo import MongoBase
@@ -20,6 +21,18 @@ def right_order_data():
         "name": "Иван",
         "second_name": "Иванов",
         "phone": "88005553535"
+    }
+
+
+@pytest.fixture()
+def right_customer_data():
+    return {
+        "middle_name": "Иванович",
+        "name": "Иван",
+        "second_name": "Иванов",
+        "phone": "88005553535",
+        "email": "kekus@mail.ru",
+        "password": hashpw("sets4be4wtest43", gensalt())
     }
 
 
@@ -56,3 +69,21 @@ def test_db_order_insert_with_same_id(get_order_and_db_by_right_data):
 
 def test_db_order_update_status(get_order_and_db_by_right_data):
     pass
+
+
+def test_db_customer_find_by_email(right_customer_data):
+    db = MongoBase()
+    customer = Customer(**right_customer_data)
+    db.upload_customer(customer)
+    customer_from_bd = db.get_customer_by_email('kekus@mail.ru')
+    db.delete_customer(customer)
+    assert customer.id == customer_from_bd.id
+
+
+def test_check_hashed_pwd(right_customer_data):
+    db = MongoBase()
+    customer = Customer(**right_customer_data)
+    db.upload_customer(customer)
+    customer_from_db = db.get_customer_by_email('kekus@mail.ru')
+    db.delete_customer(customer)
+    assert customer.password == customer_from_db.password
