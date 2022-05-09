@@ -1,7 +1,7 @@
 import os
 from os.path import dirname, join
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, url_for, redirect
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from app_code.controller.controller import Controller
 
@@ -36,7 +36,7 @@ def create_order():
 def send_order():
     received_data = request.form.to_dict()
     controller.make_solutions_by_order(received_data)
-    return render_template('index.html')
+    return redirect(url_for('root'))
 
 
 @app.route('/solutions', methods=['GET'])
@@ -54,6 +54,7 @@ def login_form():
             login_user(customer)
         except Exception:
             flash('Аккаунта с такой почтой и паролем не существует')
+        return redirect(url_for('root'))
     return render_template('login.html')
 
 
@@ -62,7 +63,7 @@ def signup():
     if request.method == 'POST':
         if not controller.sign_up_user(request.form.to_dict()):
             flash('Аккаунт с такой почтой уже зарегистрирован')
-    return render_template('login.html')
+    return redirect(url_for('root'))
 
 
 @app.route('/orders', methods=['GET'])
@@ -75,7 +76,7 @@ def show_orders():
 @login_required
 def logout():
     logout_user()
-    return render_template('index.html')
+    return redirect(url_for('root'))
 
 
 if __name__ == '__main__':
