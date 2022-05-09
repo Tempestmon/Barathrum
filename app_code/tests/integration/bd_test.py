@@ -12,15 +12,10 @@ def right_order_data():
         "address_from": "2",
         "address_to": "2",
         "cargo_type": "casual",
-        "email": "kekus@mail.ru",
         "height": "2",
         "length": "2",
         "weight": "2",
         "width": "2",
-        "middle_name": "Иванович",
-        "name": "Иван",
-        "second_name": "Иванов",
-        "phone": "88005553535"
     }
 
 
@@ -37,8 +32,8 @@ def right_customer_data():
 
 
 @pytest.fixture()
-def get_order_and_db_by_right_data(right_order_data) -> Tuple[MongoBase, Order]:
-    customer = Customer(**right_order_data)
+def get_order_and_db_by_right_data(right_customer_data, right_order_data) -> Tuple[MongoBase, Order]:
+    customer = Customer(**right_customer_data)
     cargo = Cargo(**right_order_data)
     order = Order(customer=customer, cargo=cargo, **right_order_data)
     db = MongoBase()
