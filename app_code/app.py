@@ -2,7 +2,7 @@ import os
 from os.path import dirname, join
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash
-from flask_login import LoginManager, login_user, login_required
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from app_code.controller.controller import Controller
 
 app = Flask(__name__, template_folder='templates')
@@ -26,11 +26,13 @@ def root():
 
 
 @app.route('/make_order', methods=['GET'])
+@login_required
 def create_order():
     return render_template('order.html')
 
 
 @app.route('/make_order/order', methods=['POST'])
+@login_required
 def send_order():
     received_data = request.form.to_dict()
     controller.make_solutions_by_order(received_data)
@@ -38,6 +40,7 @@ def send_order():
 
 
 @app.route('/solutions', methods=['GET'])
+@login_required
 def give_solutions():
     solutions = controller.extract_solutions_from_bd()
     return 'kek'
@@ -65,6 +68,13 @@ def signup():
 @app.route('/orders', methods=['GET'])
 @login_required
 def show_orders():
+    return render_template('index.html')
+
+
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
     return render_template('index.html')
 
 

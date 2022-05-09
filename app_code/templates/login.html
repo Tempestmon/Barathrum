@@ -24,12 +24,14 @@
                 <img src="static/logo.png" alt="logo" class="d-inline-block align-top" width="30" height="30">
                 Barathrum
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a href="/orders" class="nav-link">Заказы</a>
                     </li>
@@ -39,9 +41,21 @@
                     <li class="nav-item">
                         <a href="/make_order" class="nav-link">Сделать заказ</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="/login" class="nav-link">Регистрация/Вход</a>
-                    </li>
+                    <div class="dropdown">
+                        <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{ current_user.name + " " + current_user.second_name }}
+                        </a>
+                      
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                          <li><a class="dropdown-item" href="/logout">Выйти</a></li>
+                        </ul>
+                      </div>
+                    {% endif %}
+                    {% if not current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="/login" class="nav-link">Регистрация/Вход</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
