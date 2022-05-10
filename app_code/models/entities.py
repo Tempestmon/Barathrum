@@ -35,10 +35,10 @@ class DriverQualification(Enum):
 
 class Driver(Person):
     qualification: DriverQualification
-    _qualification_rate_map: dict[DriverQualification: float] = {DriverQualification.low: 0.25,
-                                                                 DriverQualification.below_average: 0.5,
-                                                                 DriverQualification.above_average: 0.75,
-                                                                 DriverQualification.high: 1.0}
+    _qualification_rate_map: dict[DriverQualification: float] = {DriverQualification.low.value: 0.25,
+                                                                 DriverQualification.below_average.value: 0.5,
+                                                                 DriverQualification.above_average.value: 0.75,
+                                                                 DriverQualification.high.value: 1.0}
     experience: int = Field(ge=2, le=60)
     is_busy: DriverStatuses = DriverStatuses.is_waiting
 
@@ -58,10 +58,10 @@ class CargoType(Enum):
 
 class Cargo(BaseModel):
     cargo_type: CargoType
-    _cargo_type_rate_map: dict[CargoType: float] = {CargoType.casual: 0.25,
-                                                    CargoType.corruptible: 0.5,
-                                                    CargoType.fragile: 0.75,
-                                                    CargoType.dangerous: 1.0}
+    _cargo_type_rate_map: dict[CargoType: float] = {CargoType.casual.value: 0.25,
+                                                    CargoType.corruptible.value: 0.5,
+                                                    CargoType.fragile.value: 0.75,
+                                                    CargoType.dangerous.value: 1.0}
     width: float
     length: float
     height: float
@@ -95,6 +95,7 @@ class Order(BaseModel):
 
     class Config:
         use_enum_values = True
+        allow_mutation = True
 
     def update_status(self, status: OrderStatuses) -> None:
         self.status = status

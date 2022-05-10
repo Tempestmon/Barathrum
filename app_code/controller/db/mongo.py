@@ -118,7 +118,7 @@ class MongoBase:
         return orders
 
     def upload_customer(self, customer: Customer) -> InsertOneResult:
-        if self.get_customer_by_email(customer.email) is not None and self.get_customer_by_phone(
+        if self.get_customer_by_email(customer.email) is not None or self.get_customer_by_phone(
                 customer.phone) is not None:
             raise CustomerExistsException
         return self.upload_entity(customer)
