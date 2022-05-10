@@ -90,7 +90,7 @@ class Order(BaseModel):
     # TODO: Мб сделать классы адресов, который легко парсится
     address_from: str
     address_to: str
-    status: OrderStatuses = OrderStatuses.in_progress
+    status: OrderStatuses = OrderStatuses.in_process
     end_date: Optional[date] = None
 
     class Config:
