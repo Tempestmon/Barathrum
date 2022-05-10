@@ -16,3 +16,10 @@ def test_mutation(right_order_data, order_creation_right_data):
     order = order_creation_right_data
     with pytest.raises(TypeError):
         order.id = uuid.uuid4()
+
+
+def test_cargo_creation():
+    data = {'cargo_type': 'Обычный', 'width': '20', 'length': '20', 'height': '20', 'weight': '40',
+            'address_from': '20', 'address_to': '20'}
+    cargo = Cargo(**data)
+    print(cargo)

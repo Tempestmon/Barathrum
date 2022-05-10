@@ -11,7 +11,7 @@ class Controller:
         order = Order(cargo=cargo, **data)
         db = MongoBase()
         db.upload_order_for_customer(customer, order)
-        self._create_solutions(order)
+        # self._create_solutions(order)
 
     def _create_solutions(self, order: Order) -> List[Solution]:
         db = MongoBase()
@@ -65,3 +65,8 @@ class Controller:
             return customer
         except Exception as e:
             raise e
+
+    def get_orders_by_user(self, customer: Customer) -> List[Order]:
+        db = MongoBase()
+        orders = db.get_orders_by_customer(customer)
+        return orders

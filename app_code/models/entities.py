@@ -1,7 +1,6 @@
-from aenum import MultiValueEnum
-from enum import Enum
 from pydantic import BaseModel as PyBaseModel, Field
 from typing import Optional, List
+from enum import Enum
 from uuid import UUID, uuid4
 from datetime import datetime, date
 from flask_login import UserMixin
@@ -27,7 +26,7 @@ class DriverStatuses(Enum):
     is_waiting = 'Свободен'
 
 
-class DriverQualification(MultiValueEnum):
+class DriverQualification(Enum):
     low = 'Низкая'
     below_average = 'Ниже среднего'
     above_average = 'Выше среднего'
@@ -42,6 +41,9 @@ class Driver(Person):
                                                                  DriverQualification.high: 1.0}
     experience: int = Field(ge=2, le=60)
     is_busy: DriverStatuses = DriverStatuses.is_waiting
+
+    class Config:
+        use_enum_values = True
 
     def get_qualification_rate(self) -> float:
         return self._qualification_rate_map[self.qualification]
@@ -65,6 +67,9 @@ class Cargo(BaseModel):
     height: float
     weight: float
 
+    class Config:
+        use_enum_values = True
+
     def get_cargo_type_rate(self):
         return self._cargo_type_rate_map[self.cargo_type]
 
@@ -87,6 +92,9 @@ class Order(BaseModel):
     address_to: str
     status: OrderStatuses = OrderStatuses.in_progress
     end_date: Optional[date] = None
+
+    class Config:
+        use_enum_values = True
 
     def update_status(self, status: OrderStatuses) -> None:
         self.status = status

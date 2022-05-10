@@ -42,7 +42,7 @@ def send_order():
 @app.route('/solutions', methods=['GET'])
 @login_required
 def give_solutions():
-    solutions = controller.extract_solutions_from_bd()
+    # solutions = controller.extract_solutions_from_bd()
     return 'kek'
 
 
@@ -69,7 +69,8 @@ def signup():
 @app.route('/orders', methods=['GET'])
 @login_required
 def show_orders():
-    return render_template('index.html')
+    orders = controller.get_orders_by_user(current_user)
+    return render_template('orders.html', orders=orders)
 
 
 @app.route('/logout', methods=['GET'])
