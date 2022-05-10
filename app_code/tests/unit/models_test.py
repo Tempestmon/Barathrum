@@ -1,6 +1,5 @@
 import uuid
 import pytest
-from bcrypt import hashpw, gensalt
 from app_code.models.entities import Cargo, Customer, Order, OrderStatuses, Driver
 from app_code.tests.integration.bd_test import right_customer_data, right_order_data
 
@@ -8,14 +7,13 @@ from app_code.tests.integration.bd_test import right_customer_data, right_order_
 @pytest.fixture()
 def right_driver_data():
     return {
+        "id": "7d525894-4d84-45e3-bd24-a5a3bfa0ba6c",
         "middle_name": "Иванович",
         "name": "Иван",
         "second_name": "Иванов",
-        "phone": "88005553535",
-        "email": "kekus@mail.ru",
-        "password": hashpw("sets4be4wtest43", gensalt()),
         "qualification": "Выше среднего",
-        "experience": 4
+        "experience": 4,
+        "status": "Свободен"
     }
 
 

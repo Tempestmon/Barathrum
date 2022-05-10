@@ -14,6 +14,9 @@ dotenv_path = join(dirname(__file__), 'envs.env')
 load_dotenv(dotenv_path)
 
 
+# TODO: Надо сделать операции с БД транзакционными
+
+
 class CustomerExistsException(Exception):
     pass
 
@@ -36,7 +39,9 @@ class MongoBase:
     def upload_entities(self, entities: List[BaseModel]) -> InsertManyResult:
         try:
             entity_dict = [orjson.loads(entity.json()) for entity in entities]
-            collection_name = entities.__class__.__name__.lower()
+            for entity in entity_dict:
+                entity['order'] = entity['order']['id']
+            collection_name = entities[0].__class__.__name__.lower()
             result = self.client[self.DATABASE_NAME][collection_name].insert_many(entity_dict)
         except OperationFailure as e:
             raise e
@@ -72,11 +77,14 @@ class MongoBase:
         return result
 
     def get_results_by_field_query_or(self, entity: Type[BaseModel], field: str,
-                                      values: List[Union[str, float, int]]) -> List[dict]:
+                                      values: List[Union[str, float, int]], limit: int = None) -> List[dict]:
         result = []
         query = [{f"{field}": value} for value in values]
         try:
-            cursor = self.client[self.DATABASE_NAME][entity.__name__.lower()].find({"$or": query})
+            if limit is None:
+                cursor = self.client[self.DATABASE_NAME][entity.__name__.lower()].find({"$or": query})
+            else:
+                cursor = self.client[self.DATABASE_NAME][entity.__name__.lower()].find({"$or": query}).limit(limit)
         except OperationFailure as e:
             raise e
         for record in cursor:
@@ -110,6 +118,8 @@ class MongoBase:
     def get_orders_by_customer(self, customer) -> List[dict]:
         result = self.get_one_result_by_field(Customer, 'id', customer.id)['orders']
         orders = []
+        if result is None:
+            return orders
         try:
             for order in result:
                 orders.append(order)
@@ -149,7 +159,7 @@ class MongoBase:
 
     def get_vacant_drivers(self) -> List[Driver]:
         results = self.get_results_by_field_query_or(Driver, 'status', [DriverStatuses.is_waiting.value,
-                                                                        DriverStatuses.is_candidate.value])
+                                                                        DriverStatuses.is_candidate.value], 10)
         drivers = []
         for result in results:
             drivers.append(Driver(**result))
@@ -157,3 +167,9 @@ class MongoBase:
 
     def upload_solutions(self, solutions: List[Solution]) -> InsertManyResult:
         return self.upload_entities(solutions)
+
+    def update_driver_status(self, driver: Driver) -> UpdateResult:
+        return self.update_entity(driver, 'status', driver.status.value)
+
+    def get_solutions_by_order_id(self, order_id: str) -> List[dict]:
+        return self.get_results_by_field(Solution, 'order', order_id)

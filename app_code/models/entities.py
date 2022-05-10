@@ -40,13 +40,17 @@ class Driver(Person):
                                                                  DriverQualification.above_average.value: 0.75,
                                                                  DriverQualification.high.value: 1.0}
     experience: int = Field(ge=2, le=60)
-    is_busy: DriverStatuses = DriverStatuses.is_waiting
+    status: DriverStatuses = DriverStatuses.is_waiting
 
     class Config:
         use_enum_values = True
+        allow_mutation = True
 
     def get_qualification_rate(self) -> float:
         return self._qualification_rate_map[self.qualification]
+
+    def update_status(self, status: DriverStatuses):
+        self.status = status
 
 
 class CargoType(Enum):
@@ -112,4 +116,4 @@ class Solution(BaseModel):
     order: Order
     driver: Driver
     cost: float
-    time: int
+    time: int = 0

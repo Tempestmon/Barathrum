@@ -1,8 +1,10 @@
 import os
 from os.path import dirname, join
+
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, url_for, redirect
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+
 from app_code.controller.controller import Controller
 
 app = Flask(__name__, template_folder='templates')
@@ -39,11 +41,13 @@ def send_order():
     return redirect(url_for('root'))
 
 
-@app.route('/solutions', methods=['GET'])
+@app.route('/solutions/<order_id>', methods=['GET'])
 @login_required
-def give_solutions():
-    # solutions = controller.extract_solutions_from_bd()
-    return 'kek'
+def give_solutions(order_id):
+    solutions = controller.extract_solutions_from_bd(order_id)
+    if not solutions:
+        flash('К сожалению, мы не смогли составить решения из-за высокой нагрузки на систему')
+    return render_template('solutions.html', solutions=solutions)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -54,6 +58,7 @@ def login_form():
             login_user(customer)
         except Exception:
             flash('Аккаунта с такой почтой и паролем не существует')
+            return redirect(url_for('login_form'))
         return redirect(url_for('root'))
     return render_template('login.html')
 
@@ -62,7 +67,8 @@ def login_form():
 def signup():
     if request.method == 'POST':
         if not controller.sign_up_user(request.form.to_dict()):
-            flash('Аккаунт с такой почтой уже зарегистрирован')
+            flash('Аккаунт с такой почтой или телефоном уже зарегистрирован')
+            return redirect(url_for('signup'))
     return redirect(url_for('root'))
 
 

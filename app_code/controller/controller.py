@@ -1,4 +1,4 @@
-from app_code.models.entities import Customer, Order, Cargo, Solution, Driver, OrderStatuses
+from app_code.models.entities import Customer, Order, Cargo, Solution, Driver, OrderStatuses, DriverStatuses
 from app_code.controller.db.mongo import MongoBase, CustomerExistsException
 from typing import List
 from bcrypt import hashpw, checkpw, gensalt
@@ -11,24 +11,26 @@ class Controller:
         order = Order(cargo=cargo, **data)
         db = MongoBase()
         db.upload_order_for_customer(customer, order)
-        # self._create_solutions(order)
+        self._create_solutions(order)
 
-    def _create_solutions(self, order: Order) -> List[Solution]:
+    def _create_solutions(self, order: Order) -> None:
         db = MongoBase()
         drivers = db.get_vacant_drivers()
         solutions = []
         if not drivers:
-            return solutions
+            return
         for driver in drivers:
             solutions.append(Solution(
                 order=order,
                 driver=driver,
                 cost=self.calculate_cost(driver, order.cargo)
             ))
-        order.update_status(OrderStatuses.wait_decision)
+            if driver.status != DriverStatuses.is_candidate:
+                driver.update_status(DriverStatuses.is_candidate)
+                db.update_driver_status(driver)
         db.upload_solutions(solutions)
+        order.update_status(OrderStatuses.wait_decision)
         db.update_order_status(order)
-        return solutions
 
     def calculate_cost(self, driver: Driver, cargo: Cargo) -> float:
         base_cost = 400
@@ -36,8 +38,10 @@ class Controller:
         cargo_base = 300
         return base_cost + qualification_base * driver.get_qualification_rate() + cargo_base * cargo.get_cargo_type_rate()
 
-    def extract_solutions_from_bd(self, customer: Customer, order: Order) -> List[Solution]:
-        pass
+    def extract_solutions_from_bd(self, order_id: str) -> List[dict]:
+        db = MongoBase()
+        solutions = db.get_solutions_by_order_id(order_id)
+        return solutions
 
     def sign_up_user(self, data: dict) -> bool:
         data['password'] = hashpw(data['password'], gensalt())
@@ -66,7 +70,7 @@ class Controller:
         except Exception as e:
             raise e
 
-    def get_orders_by_user(self, customer: Customer) -> List[Order]:
+    def get_orders_by_user(self, customer: Customer) -> List[dict]:
         db = MongoBase()
         orders = db.get_orders_by_customer(customer)
         return orders
