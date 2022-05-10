@@ -32,37 +32,38 @@ def right_customer_data():
 
 
 @pytest.fixture()
-def get_order_and_db_by_right_data(right_customer_data, right_order_data) -> Tuple[MongoBase, Order]:
+def get_db_customer_order_by_right_data(right_customer_data, right_order_data) -> Tuple[MongoBase, Customer, Order]:
     customer = Customer(**right_customer_data)
     cargo = Cargo(**right_order_data)
     order = Order(customer=customer, cargo=cargo, **right_order_data)
     db = MongoBase()
-    return db, order
+    return db, customer, order
 
 
-def test_db_upload_and_delete_order(get_order_and_db_by_right_data):
-    db, order = get_order_and_db_by_right_data
-    db.upload_order(order)
-    db.delete_order(order)
+def test_db_upload_and_delete_order(get_db_customer_order_by_right_data):
+    db, customer, order = get_db_customer_order_by_right_data
+    db.upload_customer(customer)
+    db.upload_order_for_customer(customer, order)
+    db.delete_customer(customer)
 
 
-def test_db_upload_and_find_order(get_order_and_db_by_right_data):
-    db, order = get_order_and_db_by_right_data
-    db.upload_order(order)
+def test_db_upload_and_find_order(get_db_customer_order_by_right_data):
+    db, order = get_db_customer_order_by_right_data
+    db.upload_order_for_customer(order)
     db.get_order_by_id(str(order.id))
     db.delete_order(order)
 
 
-def test_db_order_insert_with_same_id(get_order_and_db_by_right_data):
-    db, order = get_order_and_db_by_right_data
-    db.upload_order(order)
+def test_db_order_insert_with_same_id(get_db_customer_order_by_right_data):
+    db, order = get_db_customer_order_by_right_data
+    db.upload_order_for_customer(order)
     with pytest.raises(DuplicateKeyError):
-        db.upload_order(order)
+        db.upload_order_for_customer(order)
         db.delete_order(order)
     db.delete_order(order)
 
 
-def test_db_order_update_status(get_order_and_db_by_right_data):
+def test_db_order_update_status(get_db_customer_order_by_right_data):
     pass
 
 

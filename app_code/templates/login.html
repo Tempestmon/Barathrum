@@ -42,7 +42,7 @@
                         <a href="/make_order" class="nav-link">Сделать заказ</a>
                     </li>
                     <div class="dropdown">
-                        <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                           {{ current_user.name + " " + current_user.second_name }}
                         </a>
                       
@@ -89,7 +89,7 @@
                 oninput='password_confirmation.setCustomValidity(password_confirmation.value != password.value ? "Пароли не совпадают" : "")'>
                 <h1 class="h3 mb-3 font-weight-normal text-center">Или зарегистрируйтесь!</h1>
 
-                <label for="email" class="form-label">Имя:</label>
+                <label for="email" class="form-label">Email:</label>
                 <input type="email" name="email" id="email" placeholder="ivan@mail.ru" class="form-control mb-4"
                     required />
 

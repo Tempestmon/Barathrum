@@ -1,4 +1,4 @@
-from app_code.models.entities import Customer, Order, Cargo, Solution
+from app_code.models.entities import Customer, Order, Cargo, Solution, Driver, OrderStatuses
 from app_code.controller.db.mongo import MongoBase, CustomerExistsException
 from typing import List
 from bcrypt import hashpw, checkpw, gensalt
@@ -6,40 +6,37 @@ from bcrypt import hashpw, checkpw, gensalt
 
 class Controller:
 
-    def make_solutions_by_order(self, data: dict) -> None:
-        customer = Customer(**data)
+    def make_solutions_by_order(self, customer: Customer, data: dict) -> None:
         cargo = Cargo(**data)
-        order = Order(customer=customer, cargo=cargo, **data)
+        order = Order(cargo=cargo, **data)
         db = MongoBase()
-        db.upload_order(order)
-        self._create_soutions(order)
+        db.upload_order_for_customer(customer, order)
+        self._create_solutions(order)
 
-    def _create_soutions(self, order: Order) -> List[Solution]:
+    def _create_solutions(self, order: Order) -> List[Solution]:
         db = MongoBase()
-        drivers = db.get_vacant_driver(order)
+        drivers = db.get_vacant_drivers()
         solutions = []
         if not drivers:
             return solutions
-        # TODO: получать по квалификации и типу груза их коэффициенты (мб сделать методы классов)
         for driver in drivers:
             solutions.append(Solution(
                 order=order,
                 driver=driver,
-                cost=self._calculate_cost(driver.qualification, order.cargo)
+                cost=self.calculate_cost(driver, order.cargo)
             ))
+        order.update_status(OrderStatuses.wait_decision)
         db.upload_solutions(solutions)
         db.update_order_status(order)
         return solutions
 
-    # TODO: мб вынести куда-то
-    @staticmethod
-    def _calculate_cost(qualification_rate: float, cargo_type_rate: float) -> float:
+    def calculate_cost(self, driver: Driver, cargo: Cargo) -> float:
         base_cost = 400
         qualification_base = 300
         cargo_base = 300
-        return base_cost + qualification_base * qualification_rate + cargo_base * cargo_type_rate
+        return base_cost + qualification_base * driver.get_qualification_rate() + cargo_base * cargo.get_cargo_type_rate()
 
-    def extract_solutions_from_bd(self) -> List[Solution]:
+    def extract_solutions_from_bd(self, customer: Customer, order: Order) -> List[Solution]:
         pass
 
     def sign_up_user(self, data: dict) -> bool:

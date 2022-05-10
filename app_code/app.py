@@ -35,7 +35,7 @@ def create_order():
 @login_required
 def send_order():
     received_data = request.form.to_dict()
-    controller.make_solutions_by_order(received_data)
+    controller.make_solutions_by_order(current_user, received_data)
     return redirect(url_for('root'))
 
 
