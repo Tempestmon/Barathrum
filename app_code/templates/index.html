@@ -13,7 +13,7 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <title>Barathrum</title>
-    <link rel="icon" href="static/logo.png">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
     <nav class="navbar navbar-expand-lg bg-primary navbar-dark py-3 fixed-top">
         <div class="container">
             <a href="/" class="navbar-brand">
-                <img src="static/logo.png" alt="logo" class="d-inline-block align-top" width="30" height="30">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" class="d-inline-block align-top" width="30" height="30">
                 Barathrum
             </a>
 
@@ -66,7 +66,7 @@
         <div class="container p-5">
             <div class="row align-items-center justify-content-between">
                 <div class="col-md">
-                    <img src="static/truck.png" alt="truck" class="img-fluid">
+                    <img src="{{ url_for('static', filename='truck.png') }}" alt="truck" class="img-fluid">
                 </div>
                 <div class="col-md p-5">
                     <h2>Как производится заказ</h2>

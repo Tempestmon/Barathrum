@@ -2,12 +2,12 @@ import os
 from os.path import dirname, join
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, flash, url_for, redirect
+from flask import Flask, render_template, request, flash, url_for, redirect, send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 from app_code.controller.controller import Controller
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates', static_folder='static')
 controller = Controller()
 dotenv_path = join(dirname(__file__), 'config.env')
 load_dotenv(dotenv_path)
@@ -47,7 +47,13 @@ def give_solutions(order_id):
     solutions = controller.extract_solutions_from_bd(order_id)
     if not solutions:
         flash('К сожалению, мы не смогли составить решения из-за высокой нагрузки на систему')
-    return render_template('solutions.html', solutions=solutions)
+    return render_template('solutions.html', order_id=order_id, solutions=solutions)
+
+
+@app.route('/solutions/<order_id>/<solution_id>', methods=['GET'])
+@login_required
+def confirm_solution(order_id, solution_id):
+    return f'Решение {solution_id} для заказа {order_id}'
 
 
 @app.route('/login', methods=['GET', 'POST'])
