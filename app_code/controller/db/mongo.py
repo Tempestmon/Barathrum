@@ -109,11 +109,15 @@ class MongoBase:
     def delete_order(self, order: Order) -> DeleteResult:
         return self.delete_entity(order)
 
-    def get_order_by_id(self, order_id: str) -> Union[Order, None]:
-        result = self.get_one_result_by_field(Order, 'id', order_id)
+    def get_order_by_id(self, customer: Customer, order_id: str) -> Union[dict, None]:
+        result = None
+        orders_db = self.get_orders_by_customer(customer)
+        for order in orders_db:
+            if order['id'] == order_id:
+                result = order
         if result is None:
             return result
-        return Order(**result)
+        return result
 
     def get_orders_by_customer(self, customer) -> List[dict]:
         result = self.get_one_result_by_field(Customer, 'id', customer.id)['orders']
@@ -154,8 +158,12 @@ class MongoBase:
             return None
         return Customer(**result)
 
-    def update_order_status(self, order: Order) -> UpdateResult:
-        return self.update_entity(order, 'status', order.status.value)
+    def update_order_status(self, customer: Customer, order: Order) -> UpdateResult:
+        orders = self.get_orders_by_customer(customer)
+        for order_db in orders:
+            if order_db['id'] == str(order.id):
+                order_db['status'] = order.status.value
+        return self.update_entity(customer, 'orders', orders)
 
     def get_vacant_drivers(self) -> List[Driver]:
         results = self.get_results_by_field_query_or(Driver, 'status', [DriverStatuses.is_waiting.value,
@@ -173,3 +181,18 @@ class MongoBase:
 
     def get_solutions_by_order_id(self, order_id: str) -> List[dict]:
         return self.get_results_by_field(Solution, 'order', order_id)
+
+    def get_solution_by_id(self, solution_id: str) -> dict:
+        return self.get_one_result_by_field(Solution, 'id', solution_id)
+
+    def get_driver_by_id(self, driver_id: str) -> dict:
+        return self.get_one_result_by_field(Driver, 'id', driver_id)
+
+    def update_order_solution_params(self, customer: Customer, order: Order) -> UpdateResult:
+        orders = self.get_orders_by_customer(customer)
+        for order_db in orders:
+            if order_db['id'] == str(order.id):
+                order_db['driver'] = self.get_driver_by_id(str(order.driver.id))
+                order_db['cost'] = order.cost
+                order_db['time'] = order.time
+        return self.update_entity(customer, 'orders', orders)

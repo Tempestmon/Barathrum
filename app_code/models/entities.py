@@ -96,6 +96,8 @@ class Order(BaseModel):
     address_to: str
     status: OrderStatuses = OrderStatuses.in_process
     end_date: Optional[date] = None
+    cost: Optional[float] = None
+    time: Optional[int] = None
 
     class Config:
         use_enum_values = True
@@ -103,6 +105,11 @@ class Order(BaseModel):
 
     def update_status(self, status: OrderStatuses) -> None:
         self.status = status
+
+    def set_solution_params(self, driver: Driver, cost: float, time: int):
+        self.driver = driver
+        self.cost = cost
+        self.time = time
 
 
 class Customer(Person, UserMixin):

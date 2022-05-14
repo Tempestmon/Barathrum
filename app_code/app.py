@@ -16,7 +16,11 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
+# TODO: Убрать кнопку после принятия решения
+# TODO: Создать страницу с договором и его подписью
+# TODO: Сделать псевдооплату
+# TODO: Сделать подтверждение выполнения заказа. Пока что это делает пользователь. Потом переделать для юзера и водителя
+# TODO: Сделать удаление заказа
 @login_manager.user_loader
 def load_user(user_id: str):
     return controller.get_user_by_id(user_id)
@@ -37,6 +41,7 @@ def create_order():
 @login_required
 def send_order():
     received_data = request.form.to_dict()
+    # TODO: сначала сделать просто заказ. Решения создавать после запроса пользователя, а не сразу
     controller.make_solutions_by_order(current_user, received_data)
     return redirect(url_for('root'))
 
@@ -53,7 +58,8 @@ def give_solutions(order_id):
 @app.route('/solutions/<order_id>/<solution_id>', methods=['GET'])
 @login_required
 def confirm_solution(order_id, solution_id):
-    return f'Решение {solution_id} для заказа {order_id}'
+    controller.confirm_solution(current_user, order_id, solution_id)
+    return redirect(url_for('show_orders'))
 
 
 @app.route('/login', methods=['GET', 'POST'])

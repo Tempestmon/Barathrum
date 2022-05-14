@@ -11,9 +11,9 @@ class Controller:
         order = Order(cargo=cargo, **data)
         db = MongoBase()
         db.upload_order_for_customer(customer, order)
-        self._create_solutions(order)
+        self._create_solutions(customer, order)
 
-    def _create_solutions(self, order: Order) -> None:
+    def _create_solutions(self, customer: Customer, order: Order) -> None:
         db = MongoBase()
         drivers = db.get_vacant_drivers()
         solutions = []
@@ -30,7 +30,7 @@ class Controller:
                 db.update_driver_status(driver)
         db.upload_solutions(solutions)
         order.update_status(OrderStatuses.wait_decision)
-        db.update_order_status(order)
+        db.update_order_status(customer, order)
 
     def calculate_cost(self, driver: Driver, cargo: Cargo) -> float:
         base_cost = 400
@@ -74,3 +74,17 @@ class Controller:
         db = MongoBase()
         orders = db.get_orders_by_customer(customer)
         return orders
+
+    def confirm_solution(self, customer: Customer, order_id: str, solution_id: str):
+        db = MongoBase()
+        order_db = db.get_order_by_id(customer, order_id)
+        order = Order(**order_db)
+        solution_bd = db.get_solution_by_id(solution_id)
+        solution_bd.pop('order')
+        solution = Solution(order=order, **solution_bd)
+        order.set_solution_params(driver=solution.driver, cost=solution.cost, time=solution.time)
+        order.update_status(OrderStatuses.wait_contract_signing)
+        order.driver.update_status(DriverStatuses.is_busy)
+        db.update_driver_status(order.driver)
+        db.update_order_status(customer, order)
+        db.update_order_solution_params(customer, order)
