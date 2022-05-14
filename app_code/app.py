@@ -16,11 +16,10 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# TODO: Убрать кнопку после принятия решения
-# TODO: Создать страницу с договором и его подписью
-# TODO: Сделать псевдооплату
-# TODO: Сделать подтверждение выполнения заказа. Пока что это делает пользователь. Потом переделать для юзера и водителя
+# TODO: Сделать создание решений не сразу после создания заказа, а при просмотре заказов
 # TODO: Сделать удаление заказа
+
+
 @login_manager.user_loader
 def load_user(user_id: str):
     return controller.get_user_by_id(user_id)
@@ -59,6 +58,41 @@ def give_solutions(order_id):
 @login_required
 def confirm_solution(order_id, solution_id):
     controller.confirm_solution(current_user, order_id, solution_id)
+    return redirect(url_for('show_orders'))
+
+
+@app.route('/orders/<order_id>/agreement', methods=['GET'])
+@login_required
+def show_agreement(order_id):
+    agreement = controller.create_agreement(current_user, order_id)
+    return render_template('agreement.html', order_id=order_id, agreement=agreement)
+
+
+@app.route('/orders/<order_id>/agreement/confirm', methods=['GET'])
+@login_required
+def confirm_agreement(order_id):
+    controller.confirm_agreement(current_user, order_id)
+    return redirect(url_for('show_orders'))
+
+
+@app.route('/orders/<order_id>/payments', methods=['GET'])
+@login_required
+def show_payments(order_id):
+    payments = controller.show_payments(current_user, order_id)
+    return render_template('payments.html', order_id=order_id, payments=payments)
+
+
+@app.route('/orders/<order_id>/payments/confirm', methods=['GET'])
+@login_required
+def confirm_payments(order_id):
+    controller.confirm_payments(current_user, order_id)
+    return redirect(url_for('show_orders'))
+
+
+@app.route('/orders/<order_id>/done', methods=['GET'])
+@login_required
+def close_order(order_id):
+    controller.accomplish_order(current_user, order_id)
     return redirect(url_for('show_orders'))
 
 

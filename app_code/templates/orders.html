@@ -75,9 +75,34 @@
                             <p class="card-text">Адрес груза: {{order.address_from}}</p>
                             <p class="card-text">Адрес доставки: {{order.address_from}}</p>
                             <h4 class="card-title">Параметры груза:</h4>
-                                <p class="card-text">Длина: {{order.cargo.length}} &emsp; Ширина: {{order.cargo.width}} &emsp; Высота: {{order.cargo.weight}}</p>
+                                <p class="card-text">Длина: {{order.cargo.length}} м &emsp; Ширина: {{order.cargo.width}} м &emsp; Высота: {{order.cargo.weight}} м</p>
+                                <p class="card-text">Вес: {{order.cargo.weight}} кг</p>
                                 <p class="card-text">Тип: {{order.cargo.cargo_type}}</p>
-                                <a href="{{ url_for('give_solutions', order_id=order.id) }}" class="btn btn-primary">Выбрать решение</a>
+                                {% if order.driver != None %}
+                                    <h4 class="card-title">Водитель:</h4>
+                                    <p class="card-text">{{order.driver.name}} {{order.driver.middle_name}}
+                                        {{order.driver.second_name}}</p>
+                                    <p class="card-text">Квалификация: {{order.driver.qualification}}</p>
+                                    <p class="card-text">Опыт (лет): {{order.driver.experience}}</p>
+                                    <h4 class="card-title">Параметры:</h4>
+                                    <p class="card-text">Цена: {{order.cost}} рублей</p>
+                                    <p class="card-text">Время: {{order.time}}</p>
+                                {% endif %}
+                                {% if order.status == 'Выполняется'%}
+                                    <a href="{{ url_for('close_order', order_id=order.id) }}" class="btn btn-primary">Заказ выполнен</a>
+                                {% endif %}
+                                {% if order.status == 'Ждёт выбора решения'%}
+                                    <a href="{{ url_for('give_solutions', order_id=order.id) }}" class="btn btn-primary">Выбрать решение</a>
+                                {% endif %}
+                                {% if order.status == 'Ждёт подписания договора'%}
+                                    <a href="{{ url_for('show_agreement', order_id=order.id) }}" class="btn btn-primary">Подписать договор</a>
+                                {% endif %}
+                                {% if order.status == 'Ждёт оплаты'%}
+                                    <a href="{{ url_for('show_payments', order_id=order.id) }}" class="btn btn-primary">Оплатить</a>
+                                {% endif %}
+                                {% if order.status == 'Выполняется'%}
+                                    <a href="{{ url_for('close_order', order_id=order.id) }}" class="btn btn-primary">Заказ выполнен</a>
+                                {% endif %}
                     </div>
                 </div>
             </div>

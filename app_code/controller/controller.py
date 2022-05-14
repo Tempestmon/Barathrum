@@ -75,7 +75,7 @@ class Controller:
         orders = db.get_orders_by_customer(customer)
         return orders
 
-    def confirm_solution(self, customer: Customer, order_id: str, solution_id: str):
+    def confirm_solution(self, customer: Customer, order_id: str, solution_id: str) -> None:
         db = MongoBase()
         order_db = db.get_order_by_id(customer, order_id)
         order = Order(**order_db)
@@ -88,3 +88,39 @@ class Controller:
         db.update_driver_status(order.driver)
         db.update_order_status(customer, order)
         db.update_order_solution_params(customer, order)
+
+    def create_agreement(self, customer: Customer, order_id: str) -> str:
+        db = MongoBase()
+        order_db = db.get_order_by_id(customer, order_id)
+        order = Order(**order_db)
+        agreement_text = f'Я, {customer.name} {customer.middle_name} {customer.second_name}, согласен с условиями {order.id}'
+        return agreement_text
+
+    def confirm_agreement(self, customer: Customer, order_id: str) -> None:
+        db = MongoBase()
+        order_db = db.get_order_by_id(customer, order_id)
+        order = Order(**order_db)
+        order.update_status(OrderStatuses.wait_payments)
+        db.update_order_status(customer, order)
+
+    def show_payments(self, customer: Customer, order_id: str) -> str:
+        db = MongoBase()
+        order_db = db.get_order_by_id(customer, order_id)
+        order = Order(**order_db)
+        return f'Оплатить заказ с номером {order.id} за {order.cost} рублей?'
+
+    def confirm_payments(self, customer: Customer, order_id: str) -> None:
+        db = MongoBase()
+        order_db = db.get_order_by_id(customer, order_id)
+        order = Order(**order_db)
+        order.update_status(OrderStatuses.in_progress)
+        db.update_order_status(customer, order)
+
+    def accomplish_order(self, customer: Customer, order_id: str) -> None:
+        db = MongoBase()
+        order_db = db.get_order_by_id(customer, order_id)
+        order = Order(**order_db)
+        order.update_status(OrderStatuses.ready)
+        order.driver.update_status(DriverStatuses.is_waiting)
+        db.update_order_status(customer, order)
+        db.update_driver_status(order.driver)
