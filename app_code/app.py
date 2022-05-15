@@ -41,9 +41,8 @@ def create_order():
 @login_required
 def send_order():
     received_data = request.form.to_dict()
-    # TODO: сначала сделать просто заказ. Решения создавать после запроса пользователя, а не сразу
     controller.create_order(current_user, received_data)
-    return redirect(url_for('root'))
+    return redirect(url_for('show_orders'))
 
 
 @app.route('/solutions/<order_id>', methods=['GET'])

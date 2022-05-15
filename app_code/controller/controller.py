@@ -74,9 +74,12 @@ class Controller:
         except Exception as e:
             raise e
 
-    def get_orders_by_user(self, customer: Customer) -> List[dict]:
+    def get_orders_by_user(self, customer: Customer) -> List[Order]:
         db = MongoBase()
-        orders = db.get_orders_by_customer(customer)
+        orders = []
+        orders_db = db.get_orders_by_customer(customer)
+        for order in orders_db:
+            orders.append(Order(**order))
         return orders
 
     def confirm_solution(self, customer: Customer, order_id: str, solution_id: str) -> None:
@@ -120,6 +123,7 @@ class Controller:
         order = Order(**order_db)
         order.update_status(OrderStatuses.in_progress)
         db.update_order_status(customer, order)
+        db.update_order_expected_date(customer, order)
 
     def accomplish_order(self, customer: Customer, order_id: str) -> None:
         db = MongoBase()
@@ -128,4 +132,5 @@ class Controller:
         order.update_status(OrderStatuses.ready)
         order.driver.update_status(DriverStatuses.is_waiting)
         db.update_order_status(customer, order)
+        db.update_ready_date(customer, order)
         db.update_driver_status(order.driver)

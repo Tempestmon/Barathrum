@@ -206,3 +206,17 @@ class MongoBase:
         except OperationFailure as e:
             raise e
         return result
+
+    def update_order_expected_date(self, customer, order) -> UpdateResult:
+        orders = self.get_orders_by_customer(customer)
+        for order_db in orders:
+            if order_db['id'] == str(order.id):
+                order_db['expected_date'] = order.expected_date
+        return self.update_entity(customer, 'orders', orders)
+
+    def update_ready_date(self, customer, order) -> UpdateResult:
+        orders = self.get_orders_by_customer(customer)
+        for order_db in orders:
+            if order_db['id'] == str(order.id):
+                order_db['ready_date'] = order.ready_date
+        return self.update_entity(customer, 'orders', orders)

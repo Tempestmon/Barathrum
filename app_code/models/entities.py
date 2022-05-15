@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from enum import Enum
 from random import randint
 from typing import Optional, List
@@ -6,6 +6,8 @@ from uuid import UUID, uuid4
 
 from flask_login import UserMixin
 from pydantic import BaseModel as PyBaseModel, Field
+
+DATETIME_FORMAT = "%H:%M %d-%m-%Y"
 
 
 class BaseModel(PyBaseModel):
@@ -101,6 +103,7 @@ class Order(BaseModel):
     cost: Optional[float] = None
     time: Optional[int] = None
     expected_date: Optional[datetime] = None
+    ready_date: Optional[datetime] = None
 
     class Config:
         use_enum_values = True
@@ -108,11 +111,27 @@ class Order(BaseModel):
 
     def update_status(self, status: OrderStatuses) -> None:
         self.status = status
+        if status == OrderStatuses.in_progress:
+            self.expected_date = datetime.now() + timedelta(hours=self.time)
+        if status == OrderStatuses.ready:
+            self.ready_date = datetime.now()
 
     def set_solution_params(self, driver: Driver, cost: float, time: int):
         self.driver = driver
         self.cost = cost
         self.time = time
+
+    def get_expectation(self) -> str:
+        expectation = abs(self.ready_date - self.expected_date)
+        if self.ready_date < self.expected_date:
+            return f'Заказ был выполнен раньше на {expectation.seconds // 3600} часов и {(expectation.seconds // 60) % 60} минут'
+        return f'Мы опоздали на {expectation.seconds // 3600} часов и {(expectation.seconds // 60) % 60} минут :('
+
+    def get_expected_readable_date(self) -> str:
+        return self.expected_date.strftime(DATETIME_FORMAT)
+
+    def get_ready_readable_date(self) -> str:
+        return self.ready_date.strftime(DATETIME_FORMAT)
 
 
 class Customer(Person, UserMixin):
@@ -126,4 +145,4 @@ class Solution(BaseModel):
     order: Order
     driver: Driver
     cost: float
-    time: int = randint(1, 5)
+    time: int = randint(1, 48)
