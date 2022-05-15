@@ -41,13 +41,14 @@ def create_order():
 def send_order():
     received_data = request.form.to_dict()
     # TODO: сначала сделать просто заказ. Решения создавать после запроса пользователя, а не сразу
-    controller.make_solutions_by_order(current_user, received_data)
+    controller.create_order(current_user, received_data)
     return redirect(url_for('root'))
 
 
 @app.route('/solutions/<order_id>', methods=['GET'])
 @login_required
 def give_solutions(order_id):
+    controller.make_solutions_by_order(current_user, order_id)
     solutions = controller.extract_solutions_from_bd(order_id)
     if not solutions:
         flash('К сожалению, мы не смогли составить решения из-за высокой нагрузки на систему')

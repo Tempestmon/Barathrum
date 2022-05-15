@@ -36,9 +36,6 @@
                         <a href="/orders" class="nav-link">Заказы</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#contracts" class="nav-link">Договоры</a>
-                    </li>
-                    <li class="nav-item">
                         <a href="/make_order" class="nav-link">Сделать заказ</a>
                     </li>
                     <div class="dropdown">
@@ -81,16 +78,16 @@
                         </select>
 
                         <label for="width" class="form-label">Ширина:</label>
-                        <input type="number" name="width" id="width" placeholder="20" class="form-control" required />
+                        <input type="number" name="width" id="width" placeholder="1" class="form-control" min="1" max="20" required />
 
                         <label for="length" class="form-label">Длина:</label>
-                        <input type="number" name="length" id="length" placeholder="20" class="form-control" required />
+                        <input type="number" name="length" id="length" placeholder="1" class="form-control" min="1" max="20" required />
 
                         <label for="height" class="form-label">Высота:</label>
-                        <input type="number" name="height" id="height" placeholder="20" class="form-control" required />
+                        <input type="number" name="height" id="height" placeholder="1" class="form-control" min="1" max="20" required />
 
                         <label for="weight" class="form-label">Масса:</label>
-                        <input type="number" name="weight" id="weight" placeholder="40" class="form-control" required />
+                        <input type="number" name="weight" id="weight" placeholder="20" class="form-control" min="1" max="3000" required />
 
 
                     </div>
@@ -102,11 +99,11 @@
                     <div class="col-lg-6">
 
                         <label for="address_from" class="form-label">Адрес груза:</label>
-                        <input type="text" name="address_from" id="address_from" placeholder="20" class="form-control"
+                        <input type="text" name="address_from" id="address_from" placeholder="г. Москва, ул. Прямая, д. 150" class="form-control"
                             required />
 
                         <label for="address_to" class="form-label">Адрес доставки:</label>
-                        <input type="text" name="address_to" id="address_to" placeholder="20" class="form-control"
+                        <input type="text" name="address_to" id="address_to" placeholder="г. Екатеринбург, ул. Широкая, д. 50" class="form-control"
                             required />
 
                     </div>

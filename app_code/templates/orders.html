@@ -36,9 +36,6 @@
                         <a href="/orders" class="nav-link">Заказы</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#contracts" class="nav-link">Договоры</a>
-                    </li>
-                    <li class="nav-item">
                         <a href="/make_order" class="nav-link">Сделать заказ</a>
                     </li>
                     <div class="dropdown">
@@ -67,8 +64,8 @@
     <div class="container p-5 my-5">
         {% for order in orders%}
         <div class="row justify-content-center">
-            <div class="col">
-                <div class="card w-50">
+            <div class="col-8">
+                <div class="card">
                     <h5 class="card-header">Заказ номер {{order.id}}</h5>
                     <div class="card-body">
                         <h4 class="card-title">Статус заказа: {{order.status}}</h4>
@@ -87,9 +84,6 @@
                                     <h4 class="card-title">Параметры:</h4>
                                     <p class="card-text">Цена: {{order.cost}} рублей</p>
                                     <p class="card-text">Время: {{order.time}}</p>
-                                {% endif %}
-                                {% if order.status == 'Выполняется'%}
-                                    <a href="{{ url_for('close_order', order_id=order.id) }}" class="btn btn-primary">Заказ выполнен</a>
                                 {% endif %}
                                 {% if order.status == 'Ждёт выбора решения'%}
                                     <a href="{{ url_for('give_solutions', order_id=order.id) }}" class="btn btn-primary">Выбрать решение</a>

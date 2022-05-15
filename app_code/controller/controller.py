@@ -1,21 +1,23 @@
 from app_code.models.entities import Customer, Order, Cargo, Solution, Driver, OrderStatuses, DriverStatuses
 from app_code.controller.db.mongo import MongoBase, CustomerExistsException
-from typing import List
+from typing import List, Union
 from bcrypt import hashpw, checkpw, gensalt
 
 
 class Controller:
 
-    def make_solutions_by_order(self, customer: Customer, data: dict) -> None:
+    def create_order(self, customer: Customer, data: dict) -> None:
         cargo = Cargo(**data)
         order = Order(cargo=cargo, **data)
+        order.update_status(OrderStatuses.wait_decision)
         db = MongoBase()
         db.upload_order_for_customer(customer, order)
-        self._create_solutions(customer, order)
 
-    def _create_solutions(self, customer: Customer, order: Order) -> None:
+    def make_solutions_by_order(self, customer: Customer, order_id: str) -> None:
         db = MongoBase()
         drivers = db.get_vacant_drivers()
+        order_db = db.get_order_by_id(customer, order_id)
+        order = Order(**order_db)
         solutions = []
         if not drivers:
             return
@@ -88,6 +90,7 @@ class Controller:
         db.update_driver_status(order.driver)
         db.update_order_status(customer, order)
         db.update_order_solution_params(customer, order)
+        db.delete_solutions_by_order(order)
 
     def create_agreement(self, customer: Customer, order_id: str) -> str:
         db = MongoBase()

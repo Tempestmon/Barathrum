@@ -196,3 +196,12 @@ class MongoBase:
                 order_db['cost'] = order.cost
                 order_db['time'] = order.time
         return self.update_entity(customer, 'orders', orders)
+
+    def delete_solutions_by_order(self, order: Order) -> DeleteResult:
+        try:
+            result = self.client[self.DATABASE_NAME][Solution.__name__.lower()].delete_many(
+                {"order": str(order.id)}
+            )
+        except OperationFailure as e:
+            raise e
+        return result
