@@ -2,7 +2,7 @@ import os
 from os.path import dirname, join
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, flash, url_for, redirect, send_from_directory
+from flask import Flask, render_template, request, flash, url_for, redirect
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 from app_code.controller.controller import Controller
@@ -15,6 +15,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 
 # TODO: Сделать создание решений не сразу после создания заказа, а при просмотре заказов
 # TODO: Сделать удаление заказа
@@ -116,7 +117,7 @@ def signup():
         if not controller.sign_up_user(request.form.to_dict()):
             flash('Аккаунт с такой почтой или телефоном уже зарегистрирован')
             return redirect(url_for('signup'))
-    return redirect(url_for('root'))
+    return render_template('login.html')
 
 
 @app.route('/orders', methods=['GET'])

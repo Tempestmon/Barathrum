@@ -1,9 +1,11 @@
-from pydantic import BaseModel as PyBaseModel, Field
-from typing import Optional, List
-from enum import Enum
-from uuid import UUID, uuid4
 from datetime import datetime, date
+from enum import Enum
+from random import randint
+from typing import Optional, List
+from uuid import UUID, uuid4
+
 from flask_login import UserMixin
+from pydantic import BaseModel as PyBaseModel, Field
 
 
 class BaseModel(PyBaseModel):
@@ -98,6 +100,7 @@ class Order(BaseModel):
     end_date: Optional[date] = None
     cost: Optional[float] = None
     time: Optional[int] = None
+    expected_date: Optional[datetime] = None
 
     class Config:
         use_enum_values = True
@@ -123,4 +126,4 @@ class Solution(BaseModel):
     order: Order
     driver: Driver
     cost: float
-    time: int = 0
+    time: int = randint(1, 5)

@@ -1,6 +1,8 @@
-from bcrypt import hashpw, gensalt
-import pytest
 from typing import Tuple
+
+import pytest
+from bcrypt import hashpw, gensalt
+
 from app_code.controller.db.mongo import MongoBase, CustomerExistsException
 from app_code.models.entities import Order, Cargo, Customer, OrderStatuses
 

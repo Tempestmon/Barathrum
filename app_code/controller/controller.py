@@ -1,7 +1,9 @@
-from app_code.models.entities import Customer, Order, Cargo, Solution, Driver, OrderStatuses, DriverStatuses
-from app_code.controller.db.mongo import MongoBase, CustomerExistsException
-from typing import List, Union
+from typing import List
+
 from bcrypt import hashpw, checkpw, gensalt
+
+from app_code.controller.db.mongo import MongoBase, CustomerExistsException
+from app_code.models.entities import Customer, Order, Cargo, Solution, Driver, OrderStatuses, DriverStatuses
 
 
 class Controller:
