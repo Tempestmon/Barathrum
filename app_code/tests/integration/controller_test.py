@@ -4,29 +4,67 @@ from app_code.controller.controller import Controller
 
 
 @pytest.fixture()
-def wrong_naming_data():
+def user_data():
     return {
-        "address_from": "2",
-        "address_to": "2",
-        "cargo_type": "casual",
         "email": "kekus@mail.ru",
-        "height": "2",
-        "length": "2",
-        "weight": "2",
-        "width": "2",
-        "mname": "Иванович",
+        "middle_name": "Иванович",
         "name": "Иван",
-        "sname": "Иванов",
+        "second_name": "Иванов",
         "phone": "88005553535"
     }
 
 
-def test_controller_order_creation(wrong_naming_data):
-    controller = Controller()
-    with pytest.raises(ValidationError):
-        controller.make_solutions_by_order(wrong_naming_data)
-
-
-def test_controller_order_creation_in_db(right_order_data):
+def test_create_order():
     pass
 
+
+def test_make_solutions_by_order_id():
+    pass
+
+
+def test_calculate_cost():
+    pass
+
+
+def test_extract_solutions_from_bd():
+    pass
+
+
+def test_sign_up_user():
+    pass
+
+
+def test_login_user():
+    pass
+
+
+def test_get_user_by_id():
+    pass
+
+
+def test_get_orders_by_user():
+    pass
+
+
+def test_confirm_solution():
+    pass
+
+
+def test_create_agreement():
+    pass
+
+
+def test_confirm_agreement():
+    pass
+
+
+def test_show_payments():
+    pass
+
+
+def test_confirm_payments():
+    pass
+
+
+def test_accomplish_order():
+    pass

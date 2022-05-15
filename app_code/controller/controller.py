@@ -13,7 +13,7 @@ class Controller:
         db = MongoBase()
         db.upload_order_for_customer(customer, order)
 
-    def make_solutions_by_order(self, customer: Customer, order_id: str) -> None:
+    def make_solutions_by_order_id(self, customer: Customer, order_id: str) -> None:
         db = MongoBase()
         drivers = db.get_vacant_drivers()
         order_db = db.get_order_by_id(customer, order_id)

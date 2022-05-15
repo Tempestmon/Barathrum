@@ -120,12 +120,13 @@ class MongoBase:
         return result
 
     def get_orders_by_customer(self, customer) -> List[dict]:
-        result = self.get_one_result_by_field(Customer, 'id', customer.id)['orders']
+        result = self.get_one_result_by_field(Customer, 'id', customer.id)
+        orders_db = result['orders']
         orders = []
-        if result is None:
+        if not orders_db:
             return orders
         try:
-            for order in result:
+            for order in orders_db:
                 orders.append(order)
         except Exception as e:
             raise e

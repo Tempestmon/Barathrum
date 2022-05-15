@@ -20,13 +20,13 @@ class Person(BaseModel):
     middle_name: Optional[str] = None
 
 
-class DriverStatuses(Enum):
+class DriverStatuses(str, Enum):
     is_busy = 'Занят'
     is_candidate = 'Кандидат'
     is_waiting = 'Свободен'
 
 
-class DriverQualification(Enum):
+class DriverQualification(str, Enum):
     low = 'Низкая'
     below_average = 'Ниже среднего'
     above_average = 'Выше среднего'
@@ -53,7 +53,7 @@ class Driver(Person):
         self.status = status
 
 
-class CargoType(Enum):
+class CargoType(str, Enum):
     casual = 'Обычный'
     corruptible = 'Портящийся'
     fragile = 'Хрупкий'
@@ -78,7 +78,7 @@ class Cargo(BaseModel):
         return self._cargo_type_rate_map[self.cargo_type]
 
 
-class OrderStatuses(Enum):
+class OrderStatuses(str, Enum):
     in_process = "В обработке"
     wait_decision = 'Ждёт выбора решения'
     wait_contract_signing = 'Ждёт подписания договора'

@@ -48,7 +48,7 @@ def send_order():
 @app.route('/solutions/<order_id>', methods=['GET'])
 @login_required
 def give_solutions(order_id):
-    controller.make_solutions_by_order(current_user, order_id)
+    controller.make_solutions_by_order_id(current_user, order_id)
     solutions = controller.extract_solutions_from_bd(order_id)
     if not solutions:
         flash('К сожалению, мы не смогли составить решения из-за высокой нагрузки на систему')
