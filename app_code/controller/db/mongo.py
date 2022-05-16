@@ -106,6 +106,13 @@ class MongoBase:
         orders.append(orjson.loads(order.json()))
         return self.update_entity(customer, 'orders', orders)
 
+    def upload_orders_for_customer(self, customer: Customer, orders: List[Order]) -> UpdateResult:
+        orders_to_db = [orjson.loads(obj.json()) for obj in orders]
+        return self.update_entity(customer, 'orders', orders_to_db)
+
+    def upload_orders_for_customer_json(self, customer: Customer, orders: List) -> UpdateResult:
+        return self.update_entity(customer, 'orders', orders)
+
     def delete_order(self, order: Order) -> DeleteResult:
         return self.delete_entity(order)
 

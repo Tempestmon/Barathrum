@@ -1,3 +1,6 @@
+import random
+import string
+import time
 from typing import Tuple
 
 import pytest
@@ -92,3 +95,34 @@ def test_db_customer_find_by_email(get_customer_update_from_bd):
 def test_check_hashed_pwd(get_customer_update_from_bd):
     customer_from_bd, customer = get_customer_update_from_bd
     assert customer.password == customer_from_bd.password
+
+
+def test_insert_get_orders_performance(get_db_customer_order_by_right_data):
+    db, customer, _ = get_db_customer_order_by_right_data
+    db.upload_customer(customer)
+    orders = []
+    random_orders = []
+    letters = string.ascii_lowercase
+    for i in range(5000):
+        random_order = {
+            "address_from": ''.join(random.choice(letters) for j in range(10)),
+            "address_to": ''.join(random.choice(letters) for j in range(10)),
+            "cargo_type": "Обычный",
+            "height": random.randrange(10),
+            "length": random.randrange(10),
+            "weight": random.randrange(10),
+            "width": random.randrange(10),
+        }
+        cargo = Cargo(**random_order)
+        order = Order(customer=customer, cargo=cargo, **random_order)
+        orders.append(order)
+        random_orders.append(random_order)
+    insert_start = time.time()
+    # db.upload_orders_for_customer(customer, orders)
+    db.upload_orders_for_customer_json(customer, random_orders)
+    insert_end = time.time()
+    print(f"Insert time: {(insert_end - insert_start) * 1000}")
+    get_start = time.time()
+    db.get_orders_by_customer(customer)
+    get_end = time.time()
+    print(f"Get time: {(get_end - get_start) * 1000}")
