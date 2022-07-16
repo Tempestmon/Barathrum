@@ -1,13 +1,20 @@
 from typing import List
 
-from bcrypt import hashpw, checkpw, gensalt
+from bcrypt import checkpw, gensalt, hashpw
 
-from app_code.controller.db.mongo import MongoBase, CustomerExistsException
-from app_code.models.entities import Customer, Order, Cargo, Solution, Driver, OrderStatuses, DriverStatuses
+from app_code.controller.db.mongo import CustomerExistsException, MongoBase
+from app_code.models.entities import (
+    Cargo,
+    Customer,
+    Driver,
+    DriverStatuses,
+    Order,
+    OrderStatuses,
+    Solution,
+)
 
 
 class Controller:
-
     def create_order(self, customer: Customer, data: dict) -> None:
         cargo = Cargo(**data)
         order = Order(cargo=cargo, **data)
@@ -24,11 +31,13 @@ class Controller:
         if not drivers:
             return
         for driver in drivers:
-            solutions.append(Solution(
-                order=order,
-                driver=driver,
-                cost=self.calculate_cost(driver, order.cargo)
-            ))
+            solutions.append(
+                Solution(
+                    order=order,
+                    driver=driver,
+                    cost=self.calculate_cost(driver, order.cargo),
+                )
+            )
             if driver.status != DriverStatuses.is_candidate:
                 driver.update_status(DriverStatuses.is_candidate)
                 db.update_driver_status(driver)
@@ -40,7 +49,11 @@ class Controller:
         base_cost = 400
         qualification_base = 300
         cargo_base = 300
-        return base_cost + qualification_base * driver.get_qualification_rate() + cargo_base * cargo.get_cargo_type_rate()
+        return (
+            base_cost
+            + qualification_base * driver.get_qualification_rate()
+            + cargo_base * cargo.get_cargo_type_rate()
+        )
 
     def extract_solutions_from_bd(self, order_id: str) -> List[dict]:
         db = MongoBase()
@@ -48,7 +61,7 @@ class Controller:
         return solutions
 
     def sign_up_user(self, data: dict) -> bool:
-        data['password'] = hashpw(data['password'], gensalt())
+        data["password"] = hashpw(data["password"], gensalt())
         customer = Customer(**data)
         db = MongoBase()
         try:
@@ -60,8 +73,8 @@ class Controller:
     def login_user(self, data: dict) -> Customer:
         db = MongoBase()
         try:
-            customer = db.get_customer_by_email(data['email'])
-            if checkpw(data['password'], customer.password):
+            customer = db.get_customer_by_email(data["email"])
+            if checkpw(data["password"], customer.password):
                 return customer
         except Exception as e:
             raise e
@@ -82,14 +95,18 @@ class Controller:
             orders.append(Order(**order))
         return orders
 
-    def confirm_solution(self, customer: Customer, order_id: str, solution_id: str) -> None:
+    def confirm_solution(
+        self, customer: Customer, order_id: str, solution_id: str
+    ) -> None:
         db = MongoBase()
         order_db = db.get_order_by_id(customer, order_id)
         order = Order(**order_db)
         solution_bd = db.get_solution_by_id(solution_id)
-        solution_bd.pop('order')
+        solution_bd.pop("order")
         solution = Solution(order=order, **solution_bd)
-        order.set_solution_params(driver=solution.driver, cost=solution.cost, time=solution.time)
+        order.set_solution_params(
+            driver=solution.driver, cost=solution.cost, time=solution.time
+        )
         order.update_status(OrderStatuses.wait_contract_signing)
         order.driver.update_status(DriverStatuses.is_busy)
         db.update_driver_status(order.driver)
@@ -101,7 +118,10 @@ class Controller:
         db = MongoBase()
         order_db = db.get_order_by_id(customer, order_id)
         order = Order(**order_db)
-        agreement_text = f'Я, {customer.name} {customer.middle_name} {customer.second_name}, согласен с условиями {order.id}'
+        agreement_text = f"Я, {customer.name} " \
+                         f"{customer.middle_name} " \
+                         f"{customer.second_name}, " \
+                         f"согласен с условиями {order.id}"
         return agreement_text
 
     def confirm_agreement(self, customer: Customer, order_id: str) -> None:
@@ -115,7 +135,7 @@ class Controller:
         db = MongoBase()
         order_db = db.get_order_by_id(customer, order_id)
         order = Order(**order_db)
-        return f'Оплатить заказ с номером {order.id} за {order.cost} рублей?'
+        return f"Оплатить заказ с номером {order.id} за {order.cost} рублей?"
 
     def confirm_payments(self, customer: Customer, order_id: str) -> None:
         db = MongoBase()

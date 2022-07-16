@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "barathrum"
 version = "0.1.0"
@@ -8,9 +12,16 @@ authors = ["Mikhail Smirnov <Misha8936@yandex.ru>"]
 python = "^3.10"
 pydantic = "^1.9.0"
 Flask = "^2.1.2"
+python-dotenv = "^0.20.0"
+Flask-Login = "^0.6.1"
+pytest = "^7.1.2"
+pymongo = "^4.1.1"
+orjson = "^3.7.7"
+python-bcrypt = "^0.3.2"
+flake8 = "^4.0.1"
+black = "^22.6.0"
+pylint = "^2.14.4"
+autoflake = "^1.4"
+toml-sort = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"

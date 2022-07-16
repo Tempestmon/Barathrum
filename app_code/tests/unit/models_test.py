@@ -1,7 +1,6 @@
-import uuid
 import pytest
-from app_code.models.entities import Cargo, Customer, Order, OrderStatuses, Driver
-from app_code.tests.integration.bd_test import right_customer_data, right_order_data
+
+from app_code.models.entities import Cargo, Customer, Driver, Order, OrderStatuses
 
 
 @pytest.fixture()
@@ -13,7 +12,7 @@ def right_driver_data():
         "second_name": "Иванов",
         "qualification": "Выше среднего",
         "experience": 4,
-        "status": "Свободен"
+        "status": "Свободен",
     }
 
 
@@ -25,23 +24,21 @@ def order_creation_right_data(right_customer_data, right_order_data):
     return order
 
 
-def test_cargo_creation(right_order_data):
-    cargo = Cargo(**right_order_data)
-    print(cargo)
+class TestPydantic:
+    def test_cargo_creation(self, right_order_data):
+        cargo = Cargo(**right_order_data)
+        print(cargo)
 
+    def test_right_cargo_type_rate(self, right_order_data):
+        cargo = Cargo(**right_order_data)
+        assert cargo.get_cargo_type_rate() == 0.25
 
-def test_right_cargo_type_rate(right_order_data):
-    cargo = Cargo(**right_order_data)
-    assert cargo.get_cargo_type_rate() == 0.25
+    def test_right_driver_qualification_rate(self, right_driver_data):
+        driver = Driver(**right_driver_data)
+        assert driver.get_qualification_rate() == 0.75
 
-
-def test_right_driver_qualification_rate(right_driver_data):
-    driver = Driver(**right_driver_data)
-    assert driver.get_qualification_rate() == 0.75
-
-
-def test_update_order_status(right_order_data):
-    cargo = Cargo(**right_order_data)
-    order = Order(cargo=cargo, **right_order_data)
-    order.update_status(OrderStatuses.wait_decision)
-    assert order.status.value == 'Ждёт выбора решения'
+    def test_update_order_status(self, right_order_data):
+        cargo = Cargo(**right_order_data)
+        order = Order(cargo=cargo, **right_order_data)
+        order.update_status(OrderStatuses.wait_decision)
+        assert order.status.value == "Ждёт выбора решения"

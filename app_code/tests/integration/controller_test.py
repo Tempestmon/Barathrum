@@ -8,7 +8,7 @@ def user_data():
         "middle_name": "Иванович",
         "name": "Иван",
         "second_name": "Иванов",
-        "phone": "88005553535"
+        "phone": "88005553535",
     }
 
 
