@@ -2,8 +2,8 @@ from typing import List
 
 from bcrypt import checkpw, gensalt, hashpw
 
-from app_code.controller.db.mongo import CustomerExistsException, MongoBase
-from app_code.models.entities import (
+from barathrum.controller.db.mongo import CustomerExistsException, MongoBase
+from barathrum.models.entities import (
     Cargo,
     Customer,
     Driver,
@@ -61,7 +61,7 @@ class Controller:
         return solutions
 
     def sign_up_user(self, data: dict) -> bool:
-        data["password"] = hashpw(data["password"], gensalt())
+        data["password"] = hashpw(data["password"].encode('utf-8'), gensalt())
         customer = Customer(**data)
         db = MongoBase()
         try:

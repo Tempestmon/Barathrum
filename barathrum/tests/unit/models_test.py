@@ -1,6 +1,6 @@
 import pytest
 
-from app_code.models.entities import Cargo, Customer, Driver, Order, OrderStatuses
+from barathrum.models.entities import Cargo, Customer, Driver, Order, OrderStatuses
 
 
 @pytest.fixture()

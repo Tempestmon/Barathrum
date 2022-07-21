@@ -11,7 +11,7 @@ from flask_login import (
     logout_user,
 )
 
-from app_code.controller.controller import Controller
+from barathrum.controller.controller import Controller
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 controller = Controller()
@@ -140,6 +140,10 @@ def show_orders():
 def logout():
     logout_user()
     return redirect(url_for("root"))
+
+
+def run():
+    app.run(debug=True)
 
 
 if __name__ == "__main__":

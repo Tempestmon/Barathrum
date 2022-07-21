@@ -6,8 +6,8 @@ from typing import Tuple
 import pytest
 from bcrypt import gensalt, hashpw
 
-from app_code.controller.db.mongo import CustomerExistsException, MongoBase
-from app_code.models.entities import Cargo, Customer, Order, OrderStatuses
+from barathrum.controller.db.mongo import CustomerExistsException, MongoBase
+from barathrum.models.entities import Cargo, Customer, Order, OrderStatuses
 
 
 @pytest.fixture()
@@ -18,7 +18,7 @@ def right_customer_data():
         "second_name": "Иванов",
         "phone": "88001111111",
         "email": "kekus@mail.ru",
-        "password": hashpw("sets4be4wtest43", gensalt()),
+        "password": hashpw("sets4be4wtest43".encode('utf-8'), gensalt()),
     }
 
 

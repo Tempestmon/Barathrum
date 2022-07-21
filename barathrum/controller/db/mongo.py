@@ -13,7 +13,7 @@ from pymongo.results import (
     UpdateResult,
 )
 
-from app_code.models.entities import (
+from barathrum.models.entities import (
     BaseModel,
     Customer,
     Driver,
