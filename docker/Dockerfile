@@ -5,9 +5,9 @@ WORKDIR /barathrum
 COPY . /barathrum
 
 RUN apt-get update -y && \
-    apt-get install -y libzbar-dev && \
+    apt-get install -y --no-install-recommends gcc && \
     python -m pip install --upgrade pip && \
-    pip install poetry --no-cache-dir && \
+    pip install poetry gunicorn --no-cache-dir && \
     poetry install
 
 EXPOSE 5000
