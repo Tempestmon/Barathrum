@@ -2,7 +2,8 @@ FROM python:3.10-slim as build
 
 WORKDIR /barathrum
 
-COPY . /barathrum
+COPY /barathrum /barathrum
+COPY poetry.lock pyproject.toml /barathrum/
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends gcc && \

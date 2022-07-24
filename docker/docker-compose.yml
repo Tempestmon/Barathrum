@@ -1,0 +1,35 @@
+version: '3'
+services:
+
+  barathrum:
+    image: barathrum-base:v0.0.1-alpha
+    container_name: barathrum
+    restart: unless-stopped
+    command: run python barathrum/app.py
+    environment:
+      FLASK_DEBUG: true
+    ports:
+      - "5000:5000"
+    networks:
+      - backend
+
+  mongodb:
+    image: mongo:5
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_USER: admin
+      MONOGO_PASSWORD: 123
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongodbdata:
+    driver: local

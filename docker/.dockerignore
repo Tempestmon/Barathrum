@@ -1,4 +1,4 @@
-Dockerfile
+docker/
 .git
 .gitignore
 .pytest_cache
