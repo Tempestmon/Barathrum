@@ -74,7 +74,7 @@ class Controller:
         db = MongoBase()
         try:
             customer = db.get_customer_by_email(data["email"])
-            if checkpw(data["password"], customer.password):
+            if checkpw(data["password"].encode('utf-8'), customer.password.encode('utf-8')):
                 return customer
         except Exception as e:
             raise e

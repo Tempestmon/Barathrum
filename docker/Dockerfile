@@ -1,9 +1,9 @@
 FROM python:3.10-slim as build
 
-WORKDIR /barathrum
+WORKDIR /home
 
-COPY /barathrum /barathrum
-COPY poetry.lock pyproject.toml /barathrum/
+COPY /barathrum /home/barathrum
+COPY poetry.lock pyproject.toml run.py /home/
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends gcc && \
@@ -13,5 +13,5 @@ RUN apt-get update -y && \
 
 EXPOSE 5000
 
-ENTRYPOINT ["poetry"]
-CMD ["run", "python", "barathrum/app.py"]
+ENTRYPOINT ["poetry", "run", "python"]
+CMD ["run.py"]

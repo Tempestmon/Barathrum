@@ -35,8 +35,8 @@ class CustomerExistsException(Exception):
 
 class MongoBase:
     client = MongoClient(
-        "mongodb://%s:%s@localhost:27017/"
-        % (os.environ.get("MONGO_USER"), os.environ.get("MONGO_PASSWORD"))
+        "mongodb://%s:%s@%s:27017/"
+        % (os.environ.get("MONGO_USER"), os.environ.get("MONGO_PASSWORD"), os.environ.get("MONGO_HOST"))
     )
 
     DATABASE_NAME = "barathrum"

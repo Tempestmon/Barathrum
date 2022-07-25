@@ -5,7 +5,10 @@ services:
     image: barathrum-base:v0.0.1-alpha
     container_name: barathrum
     restart: unless-stopped
-    command: run python barathrum/app.py
+    command: run.py
+    env_file:
+      - common.env
+      - backend.env
     environment:
       FLASK_DEBUG: true
     ports:
@@ -18,9 +21,8 @@ services:
     container_name: mongodb
     restart: unless-stopped
     command: mongod --auth
-    environment:
-      MONGO_USER: admin
-      MONOGO_PASSWORD: 123
+    env_file:
+      - common.env
     volumes:
       - mongodbdata:/data/db
     networks:
