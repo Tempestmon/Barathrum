@@ -2,7 +2,7 @@ version: '3'
 services:
 
   barathrum:
-    image: barathrum-base:v0.0.1-alpha
+    image: barathrum-base:v0.0.1-pre-alpha
     container_name: barathrum
     restart: unless-stopped
     command: run.py
