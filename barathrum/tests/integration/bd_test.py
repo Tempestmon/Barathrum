@@ -18,7 +18,7 @@ def right_customer_data():
         "second_name": "Иванов",
         "phone": "88001111111",
         "email": "kekus@mail.ru",
-        "password": hashpw("sets4be4wtest43".encode('utf-8'), gensalt()),
+        "password": hashpw("sets4be4wtest43".encode("utf-8"), gensalt()),
     }
 
 
@@ -71,7 +71,7 @@ class TestDataBase:
         db, customer, order = get_db_customer_order_by_right_data
         db.upload_customer(customer)
         db.upload_order_for_customer(customer, order)
-        order.update_status(OrderStatuses.ready)
+        order.update_status(OrderStatuses.READY)
         db.update_order_status(customer, order)
         db_order = db.get_order_by_id(customer, str(order.id))
         db.delete_customer(customer)
@@ -95,7 +95,7 @@ class TestPerformance:
         orders = []
         random_orders = []
         letters = string.ascii_lowercase
-        for i in range(5000):
+        for _ in range(5000):
             random_order = {
                 "address_from": "".join(random.choice(letters) for j in range(10)),
                 "address_to": "".join(random.choice(letters) for j in range(10)),

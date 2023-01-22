@@ -40,5 +40,5 @@ class TestPydantic:
     def test_update_order_status(self, right_order_data):
         cargo = Cargo(**right_order_data)
         order = Order(cargo=cargo, **right_order_data)
-        order.update_status(OrderStatuses.wait_decision)
+        order.update_status(OrderStatuses.WAIT_DECISION)
         assert order.status.value == "Ждёт выбора решения"

@@ -1,4 +1,4 @@
-import os
+from os import environ
 from os.path import dirname, join
 
 from dotenv import load_dotenv
@@ -12,12 +12,13 @@ from flask_login import (
 )
 
 from barathrum.controller.controller import Controller
+from barathrum.controller.db.mongo import MongoBase
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
-controller = Controller()
+controller = Controller(MongoBase())
 dotenv_path = join(dirname(__file__), "config.env")
 load_dotenv(dotenv_path)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+app.config["SECRET_KEY"] = environ.get("SECRET_KEY")
 
 login_manager = LoginManager()
 login_manager.init_app(app)

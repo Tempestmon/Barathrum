@@ -26,28 +26,28 @@ class Person(BaseModel):
 
 
 class DriverStatuses(str, Enum):
-    is_busy = "Занят"
-    is_candidate = "Кандидат"
-    is_waiting = "Свободен"
+    IS_BUSY = "Занят"
+    IS_CANDIDATE = "Кандидат"
+    IS_WAITING = "Свободен"
 
 
 class DriverQualification(str, Enum):
-    low = "Низкая"
-    below_average = "Ниже среднего"
-    above_average = "Выше среднего"
-    high = "Высокая"
+    LOW = "Низкая"
+    BELOW_AVERAGE = "Ниже среднего"
+    ABOVE_AVERAGE = "Выше среднего"
+    HIGH = "Высокая"
 
 
 class Driver(Person):
     qualification: DriverQualification
     _qualification_rate_map: dict[DriverQualification:float] = {
-        DriverQualification.low.value: 0.25,
-        DriverQualification.below_average.value: 0.5,
-        DriverQualification.above_average.value: 0.75,
-        DriverQualification.high.value: 1.0,
+        DriverQualification.LOW.value: 0.25,
+        DriverQualification.BELOW_AVERAGE.value: 0.5,
+        DriverQualification.ABOVE_AVERAGE.value: 0.75,
+        DriverQualification.HIGH.value: 1.0,
     }
     experience: int = Field(ge=2, le=60)
-    status: DriverStatuses = DriverStatuses.is_waiting
+    status: DriverStatuses = DriverStatuses.IS_WAITING
 
     class Config:
         use_enum_values = True
@@ -61,19 +61,19 @@ class Driver(Person):
 
 
 class CargoType(str, Enum):
-    casual = "Обычный"
-    corruptible = "Портящийся"
-    fragile = "Хрупкий"
-    dangerous = "Опасный"
+    CASUAL = "Обычный"
+    CORRUPTIBLE = "Портящийся"
+    FRAGILE = "Хрупкий"
+    DANGEROUS = "Опасный"
 
 
 class Cargo(BaseModel):
     cargo_type: CargoType
     _cargo_type_rate_map: dict[CargoType:float] = {
-        CargoType.casual.value: 0.25,
-        CargoType.corruptible.value: 0.5,
-        CargoType.fragile.value: 0.75,
-        CargoType.dangerous.value: 1.0,
+        CargoType.CASUAL.value: 0.25,
+        CargoType.CORRUPTIBLE.value: 0.5,
+        CargoType.FRAGILE.value: 0.75,
+        CargoType.DANGEROUS.value: 1.0,
     }
     width: float
     length: float
@@ -88,13 +88,13 @@ class Cargo(BaseModel):
 
 
 class OrderStatuses(str, Enum):
-    in_process = "В обработке"
-    wait_decision = "Ждёт выбора решения"
-    wait_contract_signing = "Ждёт подписания договора"
-    wait_payments = "Ждёт оплаты"
-    in_progress = "Выполняется"
-    wait_confirmation = "Ждёт подтверждения выполнения"
-    ready = "Выполнен"
+    IN_PROCESS = "В обработке"
+    WAIT_DECISION = "Ждёт выбора решения"
+    WAIT_CONTRACT_SIGNING = "Ждёт подписания договора"
+    WAIT_PAYMENTS = "Ждёт оплаты"
+    IN_PROGRESS = "Выполняется"
+    WAIT_CONFIRMATION = "Ждёт подтверждения выполнения"
+    READY = "Выполнен"
 
 
 class Order(BaseModel):
@@ -103,7 +103,7 @@ class Order(BaseModel):
     # TODO: Мб сделать классы адресов, который легко парсится
     address_from: str
     address_to: str
-    status: OrderStatuses = OrderStatuses.in_process
+    status: OrderStatuses = OrderStatuses.IN_PROCESS
     end_date: Optional[date] = None
     cost: Optional[float] = None
     time: Optional[int] = None
@@ -116,9 +116,9 @@ class Order(BaseModel):
 
     def update_status(self, status: OrderStatuses) -> None:
         self.status = status
-        if status == OrderStatuses.in_progress:
+        if status == OrderStatuses.IN_PROGRESS:
             self.expected_date = datetime.now() + timedelta(hours=self.time)
-        if status == OrderStatuses.ready:
+        if status == OrderStatuses.READY:
             self.ready_date = datetime.now()
 
     def set_solution_params(self, driver: Driver, cost: float, time: int):
@@ -129,12 +129,16 @@ class Order(BaseModel):
     def get_expectation(self) -> str:
         expectation = abs(self.ready_date - self.expected_date)
         if self.ready_date < self.expected_date:
-            return f"Заказ был выполнен раньше на " \
-                   f"{expectation.seconds // 3600} часов" \
-                   f" и {(expectation.seconds // 60) % 60} минут"
-        return f"Мы опоздали на " \
-               f"{expectation.seconds // 3600} часов и " \
-               f"{(expectation.seconds // 60) % 60} минут :("
+            return (
+                f"Заказ был выполнен раньше на "
+                f"{expectation.seconds // 3600} часов"
+                f" и {(expectation.seconds // 60) % 60} минут"
+            )
+        return (
+            f"Мы опоздали на "
+            f"{expectation.seconds // 3600} часов и "
+            f"{(expectation.seconds // 60) % 60} минут :("
+        )
 
     def get_expected_readable_date(self) -> str:
         return self.expected_date.strftime(DATETIME_FORMAT)

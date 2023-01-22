@@ -1,5 +1,8 @@
 POETRY_RUN = poetry run
-CODE = app_code
+CODE = barathrum
+USERNAME = tempestmon
+PROJECT = barathrum
+APP_VERSION = v0.0.1
 
 .PHONY: test
 test:
@@ -22,3 +25,11 @@ format:
 	$(POETRY_RUN) isort $(CODE)
 	$(POETRY_RUN) black --line-length=88 --exclude=$(EXCLUDE_CODE) $(CODE)
 	$(POETRY_RUN) toml-sort --in-place pyproject.toml
+
+.PHONY: build
+build:
+	docker build -t ${USERNAME}/${PROJECT}:${APP_VERSION} -f docker/Dockerfile .
+
+.PHONY: run
+run:
+	docker-compose -f docker/docker-compose.yml up

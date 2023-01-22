@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "barathrum"
-version = "0.0.1-pre-alpha"
+version = "0.0.1"
 description = "Information System that covers cargo delivery problems"
 authors = ["Mikhail Smirnov <Misha8936@yandex.ru>"]
 

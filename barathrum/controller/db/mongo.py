@@ -35,8 +35,9 @@ class CustomerExistsException(Exception):
 
 class MongoBase:
     client = MongoClient(
-        "mongodb://%s:%s@%s:27017/"
-        % (os.environ.get("MONGO_USER"), os.environ.get("MONGO_PASSWORD"), os.environ.get("MONGO_HOST"))
+        f"mongodb://{os.environ.get('MONGO_USER')}:"
+        f"{os.environ.get('MONGO_PASSWORD')}"
+        f"@{os.environ.get('MONGO_HOST')}:27017/"
     )
 
     DATABASE_NAME = "barathrum"
@@ -223,7 +224,7 @@ class MongoBase:
         results = self.get_results_by_field_query_or(
             Driver,
             "status",
-            [DriverStatuses.is_waiting.value, DriverStatuses.is_candidate.value],
+            [DriverStatuses.IS_WAITING.value, DriverStatuses.IS_CANDIDATE.value],
             10,
         )
         drivers = []
