@@ -34,13 +34,16 @@ class CustomerExistsException(Exception):
 
 
 class MongoBase:
-    client = MongoClient(
-        f"mongodb://{os.environ.get('MONGO_USER')}:"
-        f"{os.environ.get('MONGO_PASSWORD')}"
-        f"@{os.environ.get('MONGO_HOST')}:27017/"
-    )
+    client: MongoClient
 
     DATABASE_NAME = "barathrum"
+
+    def __init__(self):
+        self.client = MongoClient(
+            f"mongodb://{os.environ.get('MONGO_USER')}:"
+            f"{os.environ.get('MONGO_PASSWORD')}"
+            f"@{os.environ.get('MONGO_HOST', 'barathrum')}:27017/"
+        )
 
     def upload_entity(self, entity: BaseModel) -> InsertOneResult:
         try:

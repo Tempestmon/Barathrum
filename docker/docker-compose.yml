@@ -2,7 +2,7 @@ version: '3'
 services:
 
   barathrum:
-    image: tempestmon/barathrum:v0.0.1
+    image: tempestmon/barathrum:v0.0.2
     container_name: barathrum
     restart: unless-stopped
     command: run.py
@@ -19,6 +19,7 @@ services:
   mongodb:
     image: mongo:5
     container_name: mongodb
+    hostname: barathrum
     restart: unless-stopped
     command: mongod --auth
     env_file:
@@ -26,7 +27,9 @@ services:
     volumes:
       - mongodbdata:/data/db
     networks:
-      - backend
+      backend:
+        aliases:
+          - barathrum
 
 networks:
   backend:

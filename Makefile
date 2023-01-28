@@ -2,7 +2,7 @@ POETRY_RUN = poetry run
 CODE = barathrum
 USERNAME = tempestmon
 PROJECT = barathrum
-APP_VERSION = v0.0.1
+APP_VERSION = v0.0.2
 
 .PHONY: test
 test:

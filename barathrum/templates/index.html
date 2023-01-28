@@ -1,147 +1,84 @@
-<!doctype html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-    <title>Barathrum</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
-
-<body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg bg-primary navbar-dark py-3 fixed-top">
-        <div class="container">
-            <a href="/" class="navbar-brand">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" class="d-inline-block align-top" width="30" height="30">
-                Barathrum
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navmenu">
-                <ul class="navbar-nav ms-auto">
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a href="/orders" class="nav-link">Заказы</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/make_order" class="nav-link">Сделать заказ</a>
-                    </li>
-                    <div class="dropdown">
-                        <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                          {{ current_user.name + " " + current_user.second_name }}
-                        </a>
-                      
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                          <li><a class="dropdown-item" href="/logout">Выйти</a></li>
-                        </ul>
-                      </div>
-                    {% endif %}
-                    {% if not current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a href="/login" class="nav-link">Регистрация/Вход</a>
-                        </li>
-                    {% endif %}
-                </ul>
+{% block sections %}
+<section class="p-5" id="order">
+    <div class="container p-5">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-md">
+                <img src="{{ url_for('static', filename='truck.png') }}" alt="truck" class="img-fluid">
+            </div>
+            <div class="col-md p-5">
+                <h2>Как производится заказ</h2>
+                <p>
+                    Зарегистрируйтесь. Войдите в систему. Отправьте данные по заказу: укажите откуда и куда доставить
+                    груз и его параметры.
+                    Зайдите во вкладку "Заказы", выберите свой заказ. У заказа нажмите "Выбрать решение", чтобы выбрать
+                    наиболее понравившийся Вам вариант доставки.
+                    Мы сопоставляем параметры вашего заказа с нашим персоналом и даём Вам на выбор до десяти решений с
+                    разными водителями, ценами и временем.
+                </p>
+                <p>
+                    После подтверждения решения, Вам остаётся лишь электронно подписать договор и оплатить доставку,
+                    после чего мы приступаем к выполнению заказа.
+                    Когда Ваш заказ будет выполнен, Вы можете подтвердить его завершение во вкладке "Заказы".
+                </p>
             </div>
         </div>
-    </nav>
-
-    <!-- Sections -->
-    <section class="p-5" id="order">
-        <div class="container p-5">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-md">
-                    <img src="{{ url_for('static', filename='truck.png') }}" alt="truck" class="img-fluid">
-                </div>
-                <div class="col-md p-5">
-                    <h2>Как производится заказ</h2>
-                    <p>
-                        Зарегистрируйтесь. Войдите в систему. Отправьте данные по заказу: укажите откуда и куда доставить груз и его параметры.
-                        Зайдите во вкладку "Заказы", выберите свой заказ. У заказа нажмите "Выбрать решение", чтобы выбрать наиболее понравившийся Вам вариант доставки.
-                        Мы сопоставляем параметры вашего заказа с нашим персоналом и даём Вам на выбор до десяти решений с разными водителями, ценами и временем.
-                    </p>
-                    <p>
-                        После подтверждения решения, Вам остаётся лишь электронно подписать договор и оплатить доставку, после чего мы приступаем к выполнению заказа.
-                        Когда Ваш заказ будет выполнен, Вы можете подтвердить его завершение во вкладке "Заказы".
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Boxes -->
-
-    <section class="p-5">
-        <div class="container">
-            <div class="row text-center g-4">
-
-                <div class="col-md">
-                    <div class="card bg-dark text-light">
-                        <div class="card-body text-center">
-                            <div class="h1 mb-3">
-                                <i class="bi bi-laptop"></i>
-                            </div>
-
-                            <h3 class="card-title mb-3">Закажите и выберите сами</h3>
-                            <p class="card-text">
-                                Зарегистрируйтесь, войдите в систему, впишите данные о своём грузе и выберите предложенные нами варианты доставки
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md">
-                    <div class="card bg-secondary text-light">
-                        <div class="card-body text-center">
-                            <div class="h1 mb-3">
-                                <i class="bi bi-person-square"></i>
-                            </div>
-
-                            <h3 class="card-title mb-3">Заключите договор</h3>
-                            <p class="card-text">
-                                Согласитесь с предложенным и выбранным Вами решением. Электронно подпишите контракт с нами на предоставление услуги
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md">
-                    <div class="card bg-dark text-light">
-                        <div class="card-body text-center">
-                            <div class="h1 mb-3">
-                                <i class="bi bi-people"></i>
-                            </div>
-                            <h3 class="card-title mb-3">Оплатите и ждите выполнения</h3>
-                            <p class="card-text">
-                                Внесите оплату для того, чтобы мы начали выполнение заказа. Когда Ваш груз будет доставлен, подтвердите выполнение заказа
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-    <div class="container">
-        <footer class="p-5 my-4">
-            <p class="text-center text-muted">© 2022 Mikhail Smirnov</p>
-        </footer>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-</body>
+</section>
 
-</html>
+<section class="p-5">
+    <div class="container">
+        <div class="row text-center g-4">
+
+            <div class="col-md">
+                <div class="card bg-dark text-light">
+                    <div class="card-body text-center">
+                        <div class="h1 mb-3">
+                            <i class="bi bi-laptop"></i>
+                        </div>
+
+                        <h3 class="card-title mb-3">Закажите и выберите сами</h3>
+                        <p class="card-text">
+                            Зарегистрируйтесь, войдите в систему, впишите данные о своём грузе и выберите предложенные
+                            нами варианты доставки
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="card bg-secondary text-light">
+                    <div class="card-body text-center">
+                        <div class="h1 mb-3">
+                            <i class="bi bi-person-square"></i>
+                        </div>
+
+                        <h3 class="card-title mb-3">Заключите договор</h3>
+                        <p class="card-text">
+                            Согласитесь с предложенным и выбранным Вами решением. Электронно подпишите контракт с нами
+                            на предоставление услуги
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="card bg-dark text-light">
+                    <div class="card-body text-center">
+                        <div class="h1 mb-3">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h3 class="card-title mb-3">Оплатите и ждите выполнения</h3>
+                        <p class="card-text">
+                            Внесите оплату для того, чтобы мы начали выполнение заказа. Когда Ваш груз будет доставлен,
+                            подтвердите выполнение заказа
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
