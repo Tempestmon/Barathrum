@@ -2,12 +2,16 @@ POETRY_RUN = poetry run
 CODE = barathrum
 USERNAME = tempestmon
 PROJECT = barathrum
-APP_VERSION = v0.0.2
+APP_VERSION = v0.0.3
+
+.PHONY: init
+init:
+	poetry install
+	poetry shell
 
 .PHONY: test
 test:
 	PYTHONPATH=. pytest
-
 
 .PHONY: lint
 lint:

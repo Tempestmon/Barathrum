@@ -1,4 +1,7 @@
-FROM python:3.10-slim as build
+ARG PYTHON_VERSION=3.10
+#TODO: Сделать пользователя с ограниченными правами и работать из под него
+
+FROM python:${PYTHON_VERSION}-slim as build
 
 WORKDIR /home
 

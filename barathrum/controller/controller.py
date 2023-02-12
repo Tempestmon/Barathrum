@@ -1,9 +1,9 @@
 import logging
-from barathrum.config import LOGGING_CONFIG
 from typing import List
 
 from bcrypt import checkpw, gensalt, hashpw
 
+from barathrum.config import LOGGING_CONFIG
 from barathrum.controller.db.mongo import CustomerExistsException, MongoBase
 from barathrum.models.entities import (
     Cargo,
@@ -16,7 +16,7 @@ from barathrum.models.entities import (
 )
 
 logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger('barathrum')
+logger = logging.getLogger("barathrum")
 
 
 class WrongPasswordException(Exception):
@@ -89,9 +89,7 @@ class Controller:
 
     def login_user(self, data: dict) -> Customer:
         customer = self.database.get_customer_by_email(data["email"])
-        if checkpw(
-            data["password"].encode("utf-8"), customer.password.encode("utf-8")
-        ):
+        if checkpw(data["password"].encode("utf-8"), customer.password.encode("utf-8")):
             logger.info(f"{customer} is authenticated")
             return customer
         raise WrongPasswordException
